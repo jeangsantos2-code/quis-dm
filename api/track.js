@@ -138,6 +138,7 @@ function safeEventLog(event) {
 async function sendEventToNotion(event) {
   const databaseId = process.env.NOTION_EVENTS_DATABASE_ID;
   if (!process.env.NOTION_TOKEN || !databaseId) return;
+  const origin = event.origin || {};
 
   await notionCreatePage(databaseId, {
     "Event ID": title(event.eventId || ""),
@@ -152,6 +153,14 @@ async function sendEventToNotion(event) {
     "Score": number(event.data?.publicScore || event.data?.score),
     "CTA Location": richText(event.data?.ctaLocation || ""),
     "Origin": richText(JSON.stringify(event.origin || {})),
+    "UTM Source": richText(origin.utm_source || origin.ref || ""),
+    "UTM Medium": richText(origin.utm_medium || ""),
+    "UTM Campaign": richText(origin.utm_campaign || origin.campaign_id || ""),
+    "UTM Content": richText(origin.utm_content || ""),
+    "UTM Term": richText(origin.utm_term || ""),
+    "Source Post": richText(origin.source_post || ""),
+    "Subscriber ID": richText(origin.subscriber_id || ""),
+    "CUID": richText(origin.cuid || ""),
     "Device": richText(`${event.device?.viewportWidth || ""}x${event.device?.viewportHeight || ""}`),
     "Page": richText(event.page || "")
   });
@@ -171,6 +180,11 @@ async function maybeSendLeadToNotion(event) {
     "Origem": richText(event.origin?.utm_source || event.origin?.ref || ""),
     "Campanha": richText(event.origin?.utm_campaign || event.origin?.campaign_id || ""),
     "Post": richText(event.origin?.source_post || ""),
+    "UTM Medium": richText(event.origin?.utm_medium || ""),
+    "UTM Content": richText(event.origin?.utm_content || ""),
+    "UTM Term": richText(event.origin?.utm_term || ""),
+    "Subscriber ID": richText(event.origin?.subscriber_id || ""),
+    "CUID": richText(event.origin?.cuid || ""),
     "Score público": number(event.data?.publicScore),
     "Categoria": richText(event.data?.category || ""),
     "Dimensão principal": richText(event.data?.mainDimension || ""),

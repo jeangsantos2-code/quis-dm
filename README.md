@@ -15,6 +15,23 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 - `api/track.js`: endpoint Vercel para eventos e leads.
 - `api/green-webhook.js`: webhook Green para compra confirmada.
 
+## Tracking do funil
+
+Eventos principais para decisão:
+
+- `QuizLandingViewed`: visita.
+- `QuizStarted`: início do quiz.
+- `QuizCompleted`: conclusão das perguntas.
+- `LeadCaptured`: lead capturado.
+- `ResultViewed` / `DiagnosticViewed`: diagnóstico visto.
+- `OfferViewed`: oferta vista.
+- `PriceBlockViewed`: preço visto.
+- `InitiateCheckout`: clique no checkout Green.
+- `Purchase`: compra confirmada somente pelo webhook Green.
+
+O checkout recebe `sessionId`, `leadId`, UTMs, `cta`, `publicScore`, `category` e `mainDimension`.
+As bases do Notion têm colunas separadas para origem completa, campanha, post, nota, categoria, dimensão e status de compra.
+
 ## Configuração pública
 
 Edite `quiz/assets/js/config.js`:
@@ -44,6 +61,12 @@ Dashboard Notion criado:
 - Leads: `80fe2a3d1f6e47a7a4d8a5f34ada02c7`
 - Eventos: `ec7bb87797b74f7daecdce25ddcefea3`
 - Vendas: `4cd3941c785e4c70b15c2f649853e504`
+
+Views criadas no Notion:
+
+- Leads recentes, Leads por status do funil, Leads por origem, Diagnósticos por dimensão.
+- Eventos recentes, Eventos por etapa, Funil principal por evento, Eventos por origem.
+- Vendas confirmadas, Vendas por origem.
 
 ## Deploy na Vercel
 

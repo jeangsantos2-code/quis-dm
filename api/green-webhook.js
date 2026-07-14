@@ -71,20 +71,37 @@ module.exports = async function handler(req, res) {
   }
   paidPurchases.add(finalPurchaseId);
 
+  const utmSource = String(pick(payload, ["utm_source", "origin", "metadata.utm_source", "metadata.origin", "data.utm_source", "data.metadata.utm_source", "query.utm_source"]) || "");
+  const utmMedium = String(pick(payload, ["utm_medium", "metadata.utm_medium", "data.utm_medium", "data.metadata.utm_medium", "query.utm_medium"]) || "");
+  const utmCampaign = String(pick(payload, ["utm_campaign", "campaign_id", "metadata.utm_campaign", "metadata.campaign_id", "data.utm_campaign", "data.metadata.utm_campaign", "query.utm_campaign"]) || "");
+  const utmContent = String(pick(payload, ["utm_content", "metadata.utm_content", "data.utm_content", "data.metadata.utm_content", "query.utm_content"]) || "");
+  const utmTerm = String(pick(payload, ["utm_term", "metadata.utm_term", "data.utm_term", "data.metadata.utm_term", "query.utm_term"]) || "");
+  const sourcePost = String(pick(payload, ["source_post", "metadata.source_post", "data.source_post", "data.metadata.source_post", "query.source_post"]) || "");
+  const subscriberId = String(pick(payload, ["subscriber_id", "metadata.subscriber_id", "data.subscriber_id", "data.metadata.subscriber_id", "query.subscriber_id"]) || "");
+  const cuid = String(pick(payload, ["cuid", "metadata.cuid", "data.cuid", "data.metadata.cuid", "query.cuid"]) || "");
+  const publicScore = Number(pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || NaN);
+
   const purchase = {
     eventName: "Purchase",
     purchaseId: finalPurchaseId,
     orderId,
-    leadId: String(pick(payload, ["leadId", "lead_id", "metadata.leadId", "metadata.lead_id", "data.leadId", "data.metadata.leadId"]) || ""),
-    sessionId: String(pick(payload, ["sessionId", "session_id", "metadata.sessionId", "metadata.session_id", "data.sessionId", "data.metadata.sessionId"]) || ""),
+    leadId: String(pick(payload, ["leadId", "lead_id", "metadata.leadId", "metadata.lead_id", "data.leadId", "data.metadata.leadId", "query.leadId", "query.lead_id"]) || ""),
+    sessionId: String(pick(payload, ["sessionId", "session_id", "metadata.sessionId", "metadata.session_id", "data.sessionId", "data.metadata.sessionId", "query.sessionId", "query.session_id"]) || ""),
     name: String(pick(payload, ["name", "customer.name", "buyer.name", "client.name", "data.name", "data.customer.name", "data.buyer.name"]) || ""),
     email: String(pick(payload, ["email", "customer.email", "buyer.email", "client.email", "data.email", "data.customer.email", "data.buyer.email"]) || ""),
     whatsapp: String(pick(payload, ["whatsapp", "phone", "customer.phone", "buyer.phone", "client.phone", "data.whatsapp", "data.phone", "data.customer.phone", "data.buyer.phone"]) || ""),
-    origin: String(pick(payload, ["utm_source", "origin", "metadata.utm_source", "metadata.origin", "data.utm_source", "data.metadata.utm_source"]) || "green_webhook"),
-    campaign: String(pick(payload, ["utm_campaign", "campaign_id", "metadata.utm_campaign", "metadata.campaign_id", "data.utm_campaign", "data.metadata.utm_campaign"]) || ""),
-    ctaLocation: String(pick(payload, ["cta", "ctaLocation", "metadata.cta", "metadata.ctaLocation", "data.cta", "data.metadata.cta"]) || ""),
-    category: String(pick(payload, ["category", "metadata.category", "data.category", "data.metadata.category"]) || ""),
-    mainDimension: String(pick(payload, ["mainDimension", "main_dimension", "metadata.mainDimension", "metadata.main_dimension", "data.mainDimension", "data.metadata.mainDimension"]) || ""),
+    origin: utmSource || "green_webhook",
+    campaign: utmCampaign,
+    utmMedium,
+    utmContent,
+    utmTerm,
+    sourcePost,
+    subscriberId,
+    cuid,
+    ctaLocation: String(pick(payload, ["cta", "ctaLocation", "metadata.cta", "metadata.ctaLocation", "data.cta", "data.metadata.cta", "query.cta", "query.ctaLocation"]) || ""),
+    category: String(pick(payload, ["category", "metadata.category", "data.category", "data.metadata.category", "query.category"]) || ""),
+    mainDimension: String(pick(payload, ["mainDimension", "main_dimension", "metadata.mainDimension", "metadata.main_dimension", "data.mainDimension", "data.metadata.mainDimension", "query.mainDimension", "query.main_dimension"]) || ""),
+    publicScore,
     value: Number(pick(payload, ["value", "amount", "price", "data.value", "data.amount"]) || 497),
     currency: String(pick(payload, ["currency", "data.currency"]) || "BRL"),
     paymentStatus,
@@ -164,9 +181,16 @@ async function sendSaleToNotion(purchase) {
     "Data da compra": date(purchase.serverTimestamp),
     "Origem": richText(purchase.origin),
     "Campanha": richText(purchase.campaign),
+    "UTM Medium": richText(purchase.utmMedium),
+    "UTM Content": richText(purchase.utmContent),
+    "UTM Term": richText(purchase.utmTerm),
+    "Post": richText(purchase.sourcePost),
+    "Subscriber ID": richText(purchase.subscriberId),
+    "CUID": richText(purchase.cuid),
     "CTA de origem": richText(purchase.ctaLocation),
     "Categoria do diagnóstico": richText(purchase.category),
-    "Dimensão principal": richText(purchase.mainDimension)
+    "Dimensão principal": richText(purchase.mainDimension),
+    "Score público": number(purchase.publicScore)
   });
 }
 
@@ -181,7 +205,8 @@ async function updateLeadPurchaseInNotion(purchase) {
     "Status do funil": richText("purchase_confirmed"),
     "Compra confirmada?": checkbox(true),
     "Valor pago": number(purchase.value),
-    "Data da compra": date(purchase.serverTimestamp)
+    "Data da compra": date(purchase.serverTimestamp),
+    "Score público": number(purchase.publicScore)
   });
 }
 

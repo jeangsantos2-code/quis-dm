@@ -20,6 +20,7 @@ cuid=
 2. Fazer venda real para validar se a Green devolve `leadId` e `sessionId` no webhook.
 
 O quiz já envia `leadId` e `sessionId` para o checkout. O webhook da Green já está preparado para capturar esses campos se eles voltarem como campos diretos, metadata ou dentro de `data.metadata`.
+Também está preparado para receber `publicScore`, `category`, `mainDimension`, `cta` e origem completa quando a Green devolver esses parâmetros.
 
 ## Pendências de publicação
 
@@ -51,6 +52,25 @@ Variáveis secretas ainda pendentes:
 - `NOTION_TOKEN`
 - `GREEN_WEBHOOK_TOKEN`
 - `META_CAPI_TOKEN`, se for usar Purchase via Meta CAPI.
+
+## Dashboard Notion
+
+Tela inicial reorganizada com:
+
+- Funil principal: visita, início, conclusão, lead, diagnóstico, oferta, preço, checkout e compra.
+- Gargalos por etapa do funil.
+- Origem completa dos leads e eventos.
+- Nota média, categorias e dimensão principal pela base de leads.
+- Status de compra e vendas por origem.
+
+Views criadas:
+
+- `Leads por status do funil`
+- `Leads por origem`
+- `Diagnósticos por dimensão`
+- `Funil principal por evento`
+- `Eventos por origem`
+- `Vendas por origem`
 
 ## IDs do Notion
 

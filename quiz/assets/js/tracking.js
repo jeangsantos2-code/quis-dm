@@ -115,6 +115,10 @@
     return "quiz";
   }
 
+  function getResultSnapshot() {
+    return readJson("cn9_result", {});
+  }
+
   function shouldTrackUnique(eventName) {
     if (!UNIQUE_EVENTS.has(eventName)) return true;
     const sessionId = getSessionId();
@@ -213,6 +217,7 @@
     const baseUrl = config.CHECKOUT_URL || "#";
     const url = new URL(baseUrl, window.location.href);
     const origin = getOrigin();
+    const result = getResultSnapshot();
 
     ORIGIN_KEYS.forEach((key) => {
       if (origin[key]) url.searchParams.set(key, origin[key]);
@@ -221,6 +226,9 @@
     url.searchParams.set("sessionId", getSessionId());
     if (getLeadId()) url.searchParams.set("leadId", getLeadId());
     if (ctaLocation) url.searchParams.set("cta", ctaLocation);
+    if (result.publicScore) url.searchParams.set("publicScore", result.publicScore);
+    if (result.category) url.searchParams.set("category", result.category);
+    if (result.mainDimension) url.searchParams.set("mainDimension", result.mainDimension);
 
     return url.toString();
   }
