@@ -21,6 +21,12 @@ Projeto Vercel:
 quis-dm
 ```
 
+Repositório GitHub conectado:
+
+```txt
+https://github.com/jeangsantos2-code/quis-dm
+```
+
 ## Variáveis necessárias na Vercel
 
 Obrigatórias para dashboard:
@@ -61,13 +67,13 @@ A forma correta é conectar o repositório Git na Vercel:
 
 Depois disso, cada push na branch principal gera deploy automático.
 
-Quando o remote Git existir, rode:
+Se precisar reconectar o Git no futuro, rode:
 
 ```bash
-vercel git connect https://github.com/OWNER/REPO --scope jeangsantos1-s-projects
+vercel git connect https://github.com/jeangsantos2-code/quis-dm.git --scope jeangsantos1-s-projects
 ```
 
-Estado atual: ainda não há remote Git no repositório local.
+Estado atual: remote Git conectado e branch `main` publicada.
 
 ## Webhook Green
 

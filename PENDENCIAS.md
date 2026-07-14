@@ -26,16 +26,15 @@ O quiz já envia `leadId` e `sessionId` para o checkout. O webhook da Green já 
 1. Configurar `NOTION_TOKEN` na Vercel.
 2. Configurar `GREEN_WEBHOOK_TOKEN` na Vercel e na Green.
 3. Confirmar se a Green preserva metadata/query params no webhook.
-4. Conectar repositório Git à Vercel para deploy automático a cada push.
+4. Validar deploy automático da Vercel no próximo push para `main`.
 5. Fazer um teste real de compra com valor controlado.
 6. Validar no Notion se as bases `CN9 - Leads`, `CN9 - Eventos` e `CN9 - Vendas` receberam os dados corretamente.
-7. Liberar/criar um repositório GitHub acessível para este projeto. O GitHub conectado no Codex ainda não retornou repositórios disponíveis.
-8. Depois do remote Git existir, rodar `vercel git connect <git-url>` para ativar deploy automático por push.
 
 ## Produção Vercel
 
 - URL publicada: https://quis-dm.vercel.app
 - Projeto Vercel: `quis-dm`
+- Repositório GitHub: https://github.com/jeangsantos2-code/quis-dm
 - Project ID local: `prj_0P4hG1GgZn3Umvb1E94xN7DZrTwU`
 - Org ID local: `team_FvMkzZ0SYWAy0zMFXQS1HBe8`
 
