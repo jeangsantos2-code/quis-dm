@@ -76,9 +76,9 @@
       <footer class="mini-footer">
         <p>Diagnóstico Casamento Nota 9 · leitura educacional e indicativa, não clínica.</p>
         <nav aria-label="Links legais">
-          <a href="./politica-de-privacidade.html">Política de Privacidade</a>
+          <a href="/quiz/politica-de-privacidade.html">Política de Privacidade</a>
           <span aria-hidden="true">·</span>
-          <a href="./termos-de-uso.html">Termos</a>
+          <a href="/quiz/termos-de-uso.html">Termos</a>
         </nav>
       </footer>
     `;
@@ -377,8 +377,8 @@
 
           <div class="authority-layout">
             <picture class="jean-photo">
-              <source srcset="./assets/images/jean-santos.webp" type="image/webp">
-              <img src="./assets/images/jean-santos.png" alt="Foto real de Jean Santos" width="1254" height="1254" loading="eager" fetchpriority="high">
+              <source srcset="/quiz/assets/images/jean-santos.webp" type="image/webp">
+              <img src="/quiz/assets/images/jean-santos.png" alt="Foto real de Jean Santos" width="1254" height="1254" loading="eager" fetchpriority="high">
             </picture>
             <div class="authority-copy">
               <h2>Eu sou Jean Santos, fundador do Casamento Nota 9.</h2>
