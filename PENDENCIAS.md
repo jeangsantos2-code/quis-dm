@@ -78,3 +78,23 @@ Views criadas:
 - Leads: `80fe2a3d1f6e47a7a4d8a5f34ada02c7`
 - Eventos: `ec7bb87797b74f7daecdce25ddcefea3`
 - Vendas: `4cd3941c785e4c70b15c2f649853e504`
+
+## Status revisado em 15/07/2026
+
+### Resolvido sem acao do usuario
+
+- Corrigido o carregamento da URL `https://quis-dm.vercel.app/quiz`.
+- Corrigidos os caminhos de scripts, CSS, imagem e links legais no clean URL `/quiz`.
+- Adicionado versionamento dos assets para evitar cache antigo no navegador.
+- Validado o deploy automatico GitHub -> Vercel apos push em `main`.
+- Criados graficos nativos de barras no dashboard para funil, origem, dimensao, categoria e compras por origem.
+- Mantidos boards para status do funil, origem, dimensao e vendas.
+
+### Depende de acao do usuario ou de terceiros
+
+- Youze precisa enviar a origem completa no link do quiz.
+- Usuario precisa configurar `NOTION_TOKEN` na Vercel.
+- Usuario precisa configurar `GREEN_WEBHOOK_TOKEN` na Vercel e cadastrar o mesmo segredo na Green.
+- Usuario precisa realizar uma venda real com valor controlado.
+- Green precisa confirmar/preservar `leadId`, `sessionId`, UTMs, metadata e dados do diagnostico no webhook.
+- `META_CAPI_TOKEN` so e necessario se for ativar Purchase via Meta CAPI.
