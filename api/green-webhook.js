@@ -24,9 +24,13 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  const saleMetas = readSaleMetas(payload);
   const paymentStatus = String(pick(payload, [
+    "currentStatus",
     "status",
     "payment_status",
+    "sale.status",
+    "currentSale.status",
     "payment.status",
     "transaction.status",
     "purchase.status",
@@ -46,9 +50,13 @@ module.exports = async function handler(req, res) {
     "transaction_id",
     "transaction.id",
     "purchase.id",
+    "sale.id",
+    "currentSale.id",
     "data.purchase_id",
     "data.transaction_id",
-    "data.id"
+    "data.id",
+    "data.sale.id",
+    "data.currentSale.id"
   ]) || "");
 
   const orderId = String(pick(payload, [
@@ -71,25 +79,25 @@ module.exports = async function handler(req, res) {
   }
   paidPurchases.add(finalPurchaseId);
 
-  const utmSource = String(pick(payload, ["utm_source", "origin", "metadata.utm_source", "metadata.origin", "data.utm_source", "data.metadata.utm_source", "query.utm_source"]) || "");
-  const utmMedium = String(pick(payload, ["utm_medium", "metadata.utm_medium", "data.utm_medium", "data.metadata.utm_medium", "query.utm_medium"]) || "");
-  const utmCampaign = String(pick(payload, ["utm_campaign", "campaign_id", "metadata.utm_campaign", "metadata.campaign_id", "data.utm_campaign", "data.metadata.utm_campaign", "query.utm_campaign"]) || "");
-  const utmContent = String(pick(payload, ["utm_content", "metadata.utm_content", "data.utm_content", "data.metadata.utm_content", "query.utm_content"]) || "");
-  const utmTerm = String(pick(payload, ["utm_term", "metadata.utm_term", "data.utm_term", "data.metadata.utm_term", "query.utm_term"]) || "");
-  const sourcePost = String(pick(payload, ["source_post", "metadata.source_post", "data.source_post", "data.metadata.source_post", "query.source_post"]) || "");
-  const subscriberId = String(pick(payload, ["subscriber_id", "metadata.subscriber_id", "data.subscriber_id", "data.metadata.subscriber_id", "query.subscriber_id"]) || "");
-  const cuid = String(pick(payload, ["cuid", "metadata.cuid", "data.cuid", "data.metadata.cuid", "query.cuid"]) || "");
-  const publicScore = Number(pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || NaN);
+  const utmSource = String(pick(payload, ["utm_source", "origin", "metadata.utm_source", "metadata.origin", "data.utm_source", "data.metadata.utm_source", "query.utm_source"]) || saleMetaValue(saleMetas, ["utm_source", "origin"]));
+  const utmMedium = String(pick(payload, ["utm_medium", "metadata.utm_medium", "data.utm_medium", "data.metadata.utm_medium", "query.utm_medium"]) || saleMetaValue(saleMetas, ["utm_medium"]));
+  const utmCampaign = String(pick(payload, ["utm_campaign", "campaign_id", "metadata.utm_campaign", "metadata.campaign_id", "data.utm_campaign", "data.metadata.utm_campaign", "query.utm_campaign"]) || saleMetaValue(saleMetas, ["utm_campaign", "campaign_id"]));
+  const utmContent = String(pick(payload, ["utm_content", "metadata.utm_content", "data.utm_content", "data.metadata.utm_content", "query.utm_content"]) || saleMetaValue(saleMetas, ["utm_content"]));
+  const utmTerm = String(pick(payload, ["utm_term", "metadata.utm_term", "data.utm_term", "data.metadata.utm_term", "query.utm_term"]) || saleMetaValue(saleMetas, ["utm_term"]));
+  const sourcePost = String(pick(payload, ["source_post", "metadata.source_post", "data.source_post", "data.metadata.source_post", "query.source_post"]) || saleMetaValue(saleMetas, ["source_post"]));
+  const subscriberId = String(pick(payload, ["subscriber_id", "metadata.subscriber_id", "data.subscriber_id", "data.metadata.subscriber_id", "query.subscriber_id"]) || saleMetaValue(saleMetas, ["subscriber_id"]));
+  const cuid = String(pick(payload, ["cuid", "metadata.cuid", "data.cuid", "data.metadata.cuid", "query.cuid"]) || saleMetaValue(saleMetas, ["cuid"]));
+  const publicScore = Number(pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || saleMetaValue(saleMetas, ["publicScore", "public_score", "score"]));
 
   const purchase = {
     eventName: "Purchase",
     purchaseId: finalPurchaseId,
     orderId,
-    leadId: String(pick(payload, ["leadId", "lead_id", "metadata.leadId", "metadata.lead_id", "data.leadId", "data.metadata.leadId", "query.leadId", "query.lead_id"]) || ""),
-    sessionId: String(pick(payload, ["sessionId", "session_id", "metadata.sessionId", "metadata.session_id", "data.sessionId", "data.metadata.sessionId", "query.sessionId", "query.session_id"]) || ""),
-    name: String(pick(payload, ["name", "customer.name", "buyer.name", "client.name", "data.name", "data.customer.name", "data.buyer.name"]) || ""),
-    email: String(pick(payload, ["email", "customer.email", "buyer.email", "client.email", "data.email", "data.customer.email", "data.buyer.email"]) || ""),
-    whatsapp: String(pick(payload, ["whatsapp", "phone", "customer.phone", "buyer.phone", "client.phone", "data.whatsapp", "data.phone", "data.customer.phone", "data.buyer.phone"]) || ""),
+    leadId: String(pick(payload, ["leadId", "lead_id", "metadata.leadId", "metadata.lead_id", "data.leadId", "data.metadata.leadId", "query.leadId", "query.lead_id"]) || saleMetaValue(saleMetas, ["leadId", "lead_id"])),
+    sessionId: String(pick(payload, ["sessionId", "session_id", "metadata.sessionId", "metadata.session_id", "data.sessionId", "data.metadata.sessionId", "query.sessionId", "query.session_id"]) || saleMetaValue(saleMetas, ["sessionId", "session_id"])),
+    name: String(pick(payload, ["name", "customer.name", "buyer.name", "client.name", "data.name", "data.customer.name", "data.buyer.name", "data.client.name"]) || ""),
+    email: String(pick(payload, ["email", "customer.email", "buyer.email", "client.email", "data.email", "data.customer.email", "data.buyer.email", "data.client.email"]) || ""),
+    whatsapp: String(pick(payload, ["whatsapp", "phone", "customer.phone", "buyer.phone", "client.phone", "client.cellphone", "data.whatsapp", "data.phone", "data.customer.phone", "data.buyer.phone", "data.client.cellphone"]) || ""),
     origin: utmSource || "green_webhook",
     campaign: utmCampaign,
     utmMedium,
@@ -98,14 +106,14 @@ module.exports = async function handler(req, res) {
     sourcePost,
     subscriberId,
     cuid,
-    ctaLocation: String(pick(payload, ["cta", "ctaLocation", "metadata.cta", "metadata.ctaLocation", "data.cta", "data.metadata.cta", "query.cta", "query.ctaLocation"]) || ""),
-    category: String(pick(payload, ["category", "metadata.category", "data.category", "data.metadata.category", "query.category"]) || ""),
-    mainDimension: String(pick(payload, ["mainDimension", "main_dimension", "metadata.mainDimension", "metadata.main_dimension", "data.mainDimension", "data.metadata.mainDimension", "query.mainDimension", "query.main_dimension"]) || ""),
+    ctaLocation: String(pick(payload, ["cta", "ctaLocation", "metadata.cta", "metadata.ctaLocation", "data.cta", "data.metadata.cta", "query.cta", "query.ctaLocation"]) || saleMetaValue(saleMetas, ["cta", "ctaLocation"])),
+    category: String(pick(payload, ["category", "metadata.category", "data.category", "data.metadata.category", "query.category"]) || saleMetaValue(saleMetas, ["category"])),
+    mainDimension: String(pick(payload, ["mainDimension", "main_dimension", "metadata.mainDimension", "metadata.main_dimension", "data.mainDimension", "data.metadata.mainDimension", "query.mainDimension", "query.main_dimension"]) || saleMetaValue(saleMetas, ["mainDimension", "main_dimension"])),
     publicScore,
-    value: Number(pick(payload, ["value", "amount", "price", "data.value", "data.amount"]) || 497),
-    currency: String(pick(payload, ["currency", "data.currency"]) || "BRL"),
+    value: Number(pick(payload, ["value", "amount", "price", "sale.amount", "currentSale.amount", "product.amount", "data.value", "data.amount", "data.sale.amount"]) || 497),
+    currency: String(pick(payload, ["currency", "sale.currency", "data.currency", "data.sale.currency"]) || "BRL"),
     paymentStatus,
-    product: String(pick(payload, ["product", "product.name", "data.product", "data.product.name"]) || "Mentoria Casamento Nota 9"),
+    product: String(pick(payload, ["product.name", "product.title", "data.product.name", "data.product.title"]) || "Mentoria Casamento Nota 9"),
     serverTimestamp: new Date().toISOString()
   };
 
@@ -161,6 +169,26 @@ function pick(object, paths) {
     if (value !== undefined && value !== null && value !== "") return value;
   }
   return undefined;
+}
+
+function readSaleMetas(payload) {
+  const raw = pick(payload, ["saleMetas", "currentSale.saleMetas", "data.saleMetas", "data.currentSale.saleMetas"]);
+  return Array.isArray(raw) ? raw : [];
+}
+
+function saleMetaValue(metas, keys) {
+  const wanted = new Set(keys.map(normalizeMetaKey));
+  const match = metas.find((meta) => {
+    const key = meta?.meta_key ?? meta?.metaKey ?? meta?.key ?? meta?.name;
+    return wanted.has(normalizeMetaKey(key));
+  });
+
+  if (!match) return "";
+  return String(match.meta_value ?? match.metaValue ?? match.value ?? "");
+}
+
+function normalizeMetaKey(value) {
+  return String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
 }
 
 async function sendSaleToNotion(purchase) {
