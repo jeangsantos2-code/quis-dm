@@ -96,7 +96,10 @@ module.exports = async function handler(req, res) {
   const subscriberId = String(pick(payload, ["subscriber_id", "metadata.subscriber_id", "data.subscriber_id", "data.metadata.subscriber_id", "query.subscriber_id"]) || saleMetaValue(saleMetas, ["subscriber_id"]));
   const cuid = String(pick(payload, ["cuid", "metadata.cuid", "data.cuid", "data.metadata.cuid", "query.cuid"]) || saleMetaValue(saleMetas, ["cuid"]));
   const publicScoreRaw = pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || saleMetaValue(saleMetas, ["publicScore", "public_score", "score"]);
-  const publicScore = publicScoreRaw === "" || publicScoreRaw === undefined ? NaN : Number(publicScoreRaw);
+  const parsedPublicScore = Number(publicScoreRaw);
+  const publicScore = publicScoreRaw === "" || publicScoreRaw === undefined || !Number.isFinite(parsedPublicScore)
+    ? undefined
+    : parsedPublicScore;
 
   const purchase = {
     eventName: "Purchase",
