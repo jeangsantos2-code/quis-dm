@@ -30,6 +30,9 @@ Também está preparado para receber `publicScore`, `category`, `mainDimension`,
 4. Validar deploy automático da Vercel no próximo push para `main`.
 5. Fazer um teste real de compra com valor controlado.
 6. Validar no Notion se as bases `CN9 - Leads`, `CN9 - Eventos` e `CN9 - Vendas` receberam os dados corretamente.
+7. Publicar `docs/google-apps-script.js` como Web App e configurar `GOOGLE_SHEETS_WEBHOOK_URL` e `GOOGLE_SHEETS_WEBHOOK_SECRET` na Vercel.
+
+O dashboard Google Sheets já está estruturado com funil, gargalo, origem, campanha, categoria e dimensão principal. A publicação do Apps Script é a única etapa restante para a alimentação automática; o conector do Drive usado pelo Codex permite editar a planilha, mas não fornece uma credencial exportável para o runtime da Vercel.
 
 ## Produção Vercel
 

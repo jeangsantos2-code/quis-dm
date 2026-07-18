@@ -14,6 +14,8 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 - `quiz/assets/js/tracking.js`: sessão, origem, eventos, Meta Pixel opcional e checkout.
 - `api/track.js`: endpoint Vercel para eventos e leads.
 - `api/green-webhook.js`: webhook Green para compra confirmada.
+- `lib/google-sheets.js`: envio automático para a planilha visual do funil.
+- `docs/google-apps-script.js`: receptor da ponte Vercel -> Google Sheets.
 
 ## Tracking do funil
 
@@ -54,6 +56,12 @@ Use `.env.example` como referência.
 - `META_PIXEL_ID`: Pixel usado pelo CAPI, se ativado.
 - `META_CAPI_TOKEN`: token CAPI para enviar `Purchase` após pagamento confirmado.
 - `CN9_TRACK_DEBUG=true`: logs sanitizados de diagnóstico.
+- `GOOGLE_SHEETS_WEBHOOK_URL`: URL publicada do Web App no Apps Script.
+- `GOOGLE_SHEETS_WEBHOOK_SECRET`: segredo compartilhado entre Vercel e Apps Script.
+
+Dashboard Google Sheets:
+
+- https://docs.google.com/spreadsheets/d/1t3R57-jZsPCVMc0atfkvCm-EHjFxOHYi7mVGg0xQqiw/edit
 
 Dashboard Notion criado:
 

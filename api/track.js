@@ -56,6 +56,8 @@ const UNIQUE_EVENTS = new Set([
 const seenEvents = globalThis.__cn9SeenEvents || new Set();
 globalThis.__cn9SeenEvents = seenEvents;
 
+const { sendToGoogleSheets, logSettled } = require("../lib/google-sheets");
+
 module.exports = async function handler(req, res) {
   setCors(res);
 
@@ -96,11 +98,22 @@ module.exports = async function handler(req, res) {
     console.info("cn9_event", safeEventLog(serverEvent));
   }
 
-  await Promise.allSettled([
+  const destinations = [
     sendEventToNotion(serverEvent),
     maybeSendLeadToNotion(serverEvent),
-    maybeUpdateLeadInNotion(serverEvent)
-  ]);
+    maybeUpdateLeadInNotion(serverEvent),
+    sendToGoogleSheets("event", serverEvent),
+    maybeSendLeadToGoogleSheets(serverEvent),
+    maybeUpdateLeadInGoogleSheets(serverEvent)
+  ];
+  const results = await Promise.allSettled(destinations);
+
+  if (process.env.CN9_TRACK_DEBUG === "true") {
+    logSettled("cn9_event_destinations", [
+      "notion_event", "notion_lead", "notion_lead_update",
+      "sheets_event", "sheets_lead", "sheets_lead_update"
+    ], results);
+  }
 
   res.status(200).json({ ok: true });
 };
@@ -135,9 +148,21 @@ function safeEventLog(event) {
   };
 }
 
+function maybeSendLeadToGoogleSheets(event) {
+  if (event.eventName !== "LeadCaptured") return Promise.resolve({ skipped: true });
+  return sendToGoogleSheets("lead", event);
+}
+
+function maybeUpdateLeadInGoogleSheets(event) {
+  if (!event.leadId || !["ResultViewed", "ResultUnlocked", "OfferViewed", "InitiateCheckout"].includes(event.eventName)) {
+    return Promise.resolve({ skipped: true });
+  }
+  return sendToGoogleSheets("lead_stage", event);
+}
+
 async function sendEventToNotion(event) {
   const databaseId = process.env.NOTION_EVENTS_DATABASE_ID;
-  if (!process.env.NOTION_TOKEN || !databaseId) return;
+  if (!process.env.NOTION_TOKEN || !databaseId) return { skipped: true };
   const origin = event.origin || {};
 
   await notionCreatePage(databaseId, {
@@ -168,7 +193,7 @@ async function sendEventToNotion(event) {
 
 async function maybeSendLeadToNotion(event) {
   const databaseId = process.env.NOTION_LEADS_DATABASE_ID;
-  if (!process.env.NOTION_TOKEN || !databaseId || event.eventName !== "LeadCaptured") return;
+  if (!process.env.NOTION_TOKEN || !databaseId || event.eventName !== "LeadCaptured") return { skipped: true };
 
   await notionCreatePage(databaseId, {
     "Lead ID": title(event.data?.leadId || event.leadId || ""),
@@ -196,7 +221,7 @@ async function maybeSendLeadToNotion(event) {
 
 async function maybeUpdateLeadInNotion(event) {
   const databaseId = process.env.NOTION_LEADS_DATABASE_ID;
-  if (!process.env.NOTION_TOKEN || !databaseId || !event.leadId) return;
+  if (!process.env.NOTION_TOKEN || !databaseId || !event.leadId) return { skipped: true };
 
   const updatesByEvent = {
     ResultViewed: {
@@ -215,10 +240,10 @@ async function maybeUpdateLeadInNotion(event) {
   };
 
   const properties = updatesByEvent[event.eventName];
-  if (!properties) return;
+  if (!properties) return { skipped: true };
 
   const pageId = await findNotionPageByTitle(databaseId, "Lead ID", event.leadId);
-  if (!pageId) return;
+  if (!pageId) return { skipped: true };
 
   await notionUpdatePage(pageId, properties);
 }

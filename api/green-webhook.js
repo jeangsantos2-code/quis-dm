@@ -1,6 +1,8 @@
 const paidPurchases = globalThis.__cn9PaidPurchases || new Set();
 globalThis.__cn9PaidPurchases = paidPurchases;
 
+const { sendToGoogleSheets, logSettled } = require("../lib/google-sheets");
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ ok: false, error: "method_not_allowed" });
@@ -38,6 +40,12 @@ module.exports = async function handler(req, res) {
     "data.status",
     "data.payment_status"
   ]) || "").toLowerCase();
+
+  console.info("cn9_green_webhook_received", {
+    paymentStatus: paymentStatus || "missing",
+    topLevelKeys: Object.keys(payload).slice(0, 30),
+    saleMetaKeys: saleMetas.map((meta) => normalizeMetaKey(meta?.meta_key ?? meta?.metaKey ?? meta?.key ?? meta?.name)).filter(Boolean).slice(0, 30)
+  });
 
   if (!isPaidStatus(paymentStatus)) {
     res.status(200).json({ ok: true, recorded: false, reason: "not_paid" });
@@ -87,7 +95,8 @@ module.exports = async function handler(req, res) {
   const sourcePost = String(pick(payload, ["source_post", "metadata.source_post", "data.source_post", "data.metadata.source_post", "query.source_post"]) || saleMetaValue(saleMetas, ["source_post"]));
   const subscriberId = String(pick(payload, ["subscriber_id", "metadata.subscriber_id", "data.subscriber_id", "data.metadata.subscriber_id", "query.subscriber_id"]) || saleMetaValue(saleMetas, ["subscriber_id"]));
   const cuid = String(pick(payload, ["cuid", "metadata.cuid", "data.cuid", "data.metadata.cuid", "query.cuid"]) || saleMetaValue(saleMetas, ["cuid"]));
-  const publicScore = Number(pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || saleMetaValue(saleMetas, ["publicScore", "public_score", "score"]));
+  const publicScoreRaw = pick(payload, ["publicScore", "public_score", "score", "metadata.publicScore", "metadata.public_score", "metadata.score", "data.publicScore", "data.public_score", "data.score", "data.metadata.publicScore", "data.metadata.public_score", "query.publicScore"]) || saleMetaValue(saleMetas, ["publicScore", "public_score", "score"]);
+  const publicScore = publicScoreRaw === "" || publicScoreRaw === undefined ? NaN : Number(publicScoreRaw);
 
   const purchase = {
     eventName: "Purchase",
@@ -117,21 +126,26 @@ module.exports = async function handler(req, res) {
     serverTimestamp: new Date().toISOString()
   };
 
-  if (process.env.CN9_TRACK_DEBUG === "true") {
-    console.info("cn9_purchase", {
-      purchaseId: purchase.purchaseId,
-      orderId: purchase.orderId,
-      leadId: purchase.leadId,
-      sessionId: purchase.sessionId,
-      value: purchase.value
-    });
-  }
+  console.info("cn9_green_purchase_accepted", {
+    purchaseId: purchase.purchaseId,
+    hasOrderId: Boolean(purchase.orderId),
+    hasLeadId: Boolean(purchase.leadId),
+    hasSessionId: Boolean(purchase.sessionId),
+    hasUtmSource: Boolean(utmSource),
+    hasUtmCampaign: Boolean(utmCampaign),
+    hasDiagnostic: Boolean(purchase.category || purchase.mainDimension || Number.isFinite(purchase.publicScore)),
+    paymentStatus: purchase.paymentStatus,
+    value: purchase.value
+  });
 
-  await Promise.allSettled([
+  const destinations = [
     sendSaleToNotion(purchase),
     updateLeadPurchaseInNotion(purchase),
-    sendPurchaseToMeta(purchase)
-  ]);
+    sendPurchaseToMeta(purchase),
+    sendToGoogleSheets("sale", purchase)
+  ];
+  const results = await Promise.allSettled(destinations);
+  logSettled("cn9_green_purchase_destinations", ["notion_sale", "notion_lead", "meta_capi", "sheets_sale"], results);
 
   res.status(200).json({ ok: true, recorded: true });
 };
@@ -193,7 +207,7 @@ function normalizeMetaKey(value) {
 
 async function sendSaleToNotion(purchase) {
   const databaseId = process.env.NOTION_SALES_DATABASE_ID;
-  if (!process.env.NOTION_TOKEN || !databaseId) return;
+  if (!process.env.NOTION_TOKEN || !databaseId) return { skipped: true };
 
   await notionCreatePage(databaseId, {
     "Purchase ID": title(purchase.purchaseId),
@@ -224,10 +238,10 @@ async function sendSaleToNotion(purchase) {
 
 async function updateLeadPurchaseInNotion(purchase) {
   const databaseId = process.env.NOTION_LEADS_DATABASE_ID;
-  if (!process.env.NOTION_TOKEN || !databaseId || !purchase.leadId) return;
+  if (!process.env.NOTION_TOKEN || !databaseId || !purchase.leadId) return { skipped: true };
 
   const pageId = await findNotionPageByTitle(databaseId, "Lead ID", purchase.leadId);
-  if (!pageId) return;
+  if (!pageId) return { skipped: true };
 
   await notionUpdatePage(pageId, {
     "Status do funil": richText("purchase_confirmed"),
@@ -241,7 +255,7 @@ async function updateLeadPurchaseInNotion(purchase) {
 async function sendPurchaseToMeta(purchase) {
   const pixelId = process.env.META_PIXEL_ID;
   const token = process.env.META_CAPI_TOKEN;
-  if (!pixelId || !token) return;
+  if (!pixelId || !token) return { skipped: true };
 
   const endpoint = `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${encodeURIComponent(token)}`;
   const payload = {
