@@ -502,91 +502,20 @@ input:focus-visible {
 }
 
 .scene-visual {
-  position: relative;
-  height: 230px;
+  display: block;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   margin: 22px 0;
   border: 1px solid rgba(15, 43, 35, 0.12);
   border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(255, 250, 241, 0.1), rgba(31, 24, 12, 0.12)),
-    linear-gradient(140deg, #cda878, #f4dfbd 38%, #6f8a74 100%);
+  background: var(--areia);
   box-shadow: var(--soft-shadow);
 }
 
-.scene-light {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 28% 18%, rgba(255, 250, 241, 0.82), transparent 32%);
-}
-
-.scene-table {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 16px;
-  height: 62px;
-  border-radius: 50%;
-  background: rgba(68, 43, 22, 0.28);
-  transform: perspective(220px) rotateX(54deg);
-}
-
-.scene-object {
-  position: absolute;
-  border-radius: 12px;
-  background: rgba(255, 250, 241, 0.72);
-  box-shadow: inset 0 -8px 18px rgba(31, 24, 12, 0.08), 0 12px 26px rgba(31, 24, 12, 0.16);
-}
-
-.scene-object.one {
-  width: 54px;
-  height: 44px;
-  left: 22%;
-  bottom: 88px;
-  border-radius: 0 0 16px 16px;
-}
-
-.scene-object.two {
-  width: 62px;
-  height: 52px;
-  right: 22%;
-  bottom: 86px;
-  border-radius: 0 0 16px 16px;
-}
-
-.scene-object.three {
-  width: 118px;
-  height: 84px;
-  left: 34%;
-  bottom: 36px;
-  background: rgba(246, 242, 234, 0.86);
-  transform: rotate(-3deg);
-}
-
-.scene-note {
-  position: absolute;
-  top: 38px;
-  right: 34px;
-  width: 74px;
-  height: 94px;
-  border-radius: 8px;
-  background:
-    linear-gradient(rgba(15, 43, 35, 0.16) 1px, transparent 1px),
-    rgba(255, 250, 241, 0.66);
-  background-size: 100% 18px;
-  transform: rotate(4deg);
-}
-
-.scene-automatico {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 241, 0.15), rgba(31, 24, 12, 0.12)),
-    linear-gradient(140deg, #e0b48a, #6d876f 72%);
-}
-
-.scene-agenda {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 241, 0.12), rgba(31, 24, 12, 0.12)),
-    linear-gradient(135deg, #d9c8a8, #bfc8db 46%, #6a856f);
+.scene-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .processing-mark {
@@ -1029,6 +958,32 @@ blockquote {
   margin: 22px 0;
 }
 
+.movement-visual,
+.offer-visual {
+  display: block;
+  overflow: hidden;
+  margin: 22px 0;
+  border: 1px solid rgba(255, 250, 241, 0.2);
+  border-radius: var(--radius);
+  background: rgba(255, 250, 241, 0.08);
+  box-shadow: 0 18px 36px rgba(5, 22, 17, 0.28);
+}
+
+.movement-visual {
+  aspect-ratio: 3 / 4;
+}
+
+.offer-visual {
+  aspect-ratio: 4 / 5;
+}
+
+.movement-visual img,
+.offer-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .path-diagram div:not(.center-dot) {
   min-height: 94px;
   display: grid;
@@ -1065,32 +1020,20 @@ blockquote {
 }
 
 .influence-visual {
-  width: min(100%, 320px);
-  height: 250px;
+  width: min(100%, 360px);
+  aspect-ratio: 1;
   display: grid;
   place-items: center;
   position: relative;
   margin: 18px auto;
 }
 
-.influence-visual::before,
-.influence-visual::after {
+.influence-visual img {
   position: absolute;
-  content: "";
-  border-radius: 50%;
-}
-
-.influence-visual::before {
-  width: 230px;
-  height: 230px;
-  border: 1px dashed rgba(255, 250, 241, 0.42);
-}
-
-.influence-visual::after {
-  width: 144px;
-  height: 144px;
-  border: 1px solid var(--ouro);
-  background: rgba(255, 250, 241, 0.08);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .influence-visual span {
@@ -1100,17 +1043,20 @@ blockquote {
 }
 
 .influence-visual .inner {
-  width: 110px;
-  color: var(--ouro);
+  width: 34%;
+  color: var(--marfim-2);
   font-family: var(--serif);
-  font-size: 1.22rem;
+  font-size: clamp(1.02rem, 5.5vw, 1.4rem);
   line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(5, 22, 17, 0.5);
 }
 
 .influence-visual .outer {
-  bottom: 4px;
-  color: var(--areia);
+  bottom: 13%;
+  color: var(--marfim-2);
   font-size: 0.86rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(74, 28, 17, 0.55);
 }
 
 .capability-grid article span {
@@ -1302,6 +1248,18 @@ blockquote {
     padding: 28px;
   }
 
+  .scene-visual {
+    aspect-ratio: 8 / 5;
+  }
+
+  .movement-visual {
+    aspect-ratio: 16 / 9;
+  }
+
+  .offer-visual {
+    aspect-ratio: 8 / 5;
+  }
+
   .authority-layout {
     grid-template-columns: 220px 1fr;
     text-align: left;
@@ -1387,11 +1345,17 @@ blockquote {
   }
 
   .path-diagram {
-    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .path-diagram div:not(.center-dot) {
+    min-height: 78px;
   }
 
   .center-dot {
-    justify-self: center;
+    width: 50px;
+    height: 50px;
+    font-size: 0.68rem;
   }
 }
 

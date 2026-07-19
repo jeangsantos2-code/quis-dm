@@ -31,6 +31,24 @@
     }
   };
 
+  const SCENE_VISUALS = {
+    automatico: {
+      mobile: "/quiz/assets/images/scene-automatico-mobile.jpg",
+      desktop: "/quiz/assets/images/scene-automatico-desktop.jpg",
+      alt: "Um casal fisicamente perto, mas absorvido pelo celular e pela rotina."
+    },
+    tempo: {
+      mobile: "/quiz/assets/images/scene-tempo-mobile.jpg",
+      desktop: "/quiz/assets/images/scene-tempo-desktop.jpg",
+      alt: "Duas xícaras e um calendário entre um casal que se afastou na rotina."
+    },
+    agenda: {
+      mobile: "/quiz/assets/images/scene-agenda-mobile.jpg",
+      desktop: "/quiz/assets/images/scene-agenda-desktop.jpg",
+      alt: "Uma mesa tomada por agenda, mochila, telefone, tarefas e desenhos das crianças."
+    }
+  };
+
   const state = {
     screen: "intro",
     questionIndex: 0,
@@ -333,15 +351,12 @@
   }
 
   function sceneVisual(scene) {
+    const visual = SCENE_VISUALS[scene] || SCENE_VISUALS.automatico;
     return `
-      <div class="scene-visual scene-${scene}" aria-hidden="true">
-        <span class="scene-light"></span>
-        <span class="scene-table"></span>
-        <span class="scene-object one"></span>
-        <span class="scene-object two"></span>
-        <span class="scene-object three"></span>
-        <span class="scene-note"></span>
-      </div>
+      <picture class="scene-visual scene-${scene}">
+        <source media="(min-width: 720px)" srcset="${visual.desktop}">
+        <img src="${visual.mobile}" alt="${visual.alt}" width="900" height="675" loading="eager" decoding="async">
+      </picture>
     `;
   }
 
@@ -616,6 +631,10 @@
         <h2>Seu casamento já está mudando. A pergunta é para que lado.</h2>
         <p>Quando nada é cuidado, a rotina ocupa o espaço.</p>
         <p>Quando existe presença repetida, o sistema começa a responder de outro jeito.</p>
+        <picture class="movement-visual">
+          <source media="(min-width: 720px)" srcset="/quiz/assets/images/movement-crescimento-desktop.jpg">
+          <img src="/quiz/assets/images/movement-crescimento-mobile.jpg" alt="Representação visual de um casal entre a sobrecarga da rotina e a retomada da conexão." width="750" height="1000" loading="lazy" decoding="async">
+        </picture>
         <div class="path-diagram" aria-hidden="true">
           <div><span>rotina</span><strong>afasta</strong></div>
           <div class="center-dot">hoje</div>
@@ -627,8 +646,9 @@
       <section class="section-band influence-section" data-track-event="InfluenceBlockViewed" data-track='{"step":"method","component":"InfluenceCircle"}'>
         <p class="eyebrow">Influência possível</p>
         <h2>Começa pelo que está sob sua influência</h2>
-        <div class="influence-visual" aria-hidden="true">
-          <span class="inner">o que depende de mim</span>
+        <div class="influence-visual">
+          <img src="/quiz/assets/images/influence-possible.png" alt="" width="900" height="900" loading="lazy" decoding="async">
+          <span class="inner">minhas escolhas e ações</span>
           <span class="outer">resposta do outro</span>
         </div>
         <p class="strong-copy">Você não controla seu cônjuge.<br>Você controla sua influência.</p>
@@ -671,6 +691,10 @@
       <section class="section-band offer-hero" id="oferta" data-track-event="OfferViewed" data-track='{"step":"offer","offer":"Mentoria Casamento Nota 9"}'>
         <p class="eyebrow">Seu próximo passo</p>
         <h2>Uma jornada para sair do automático com direção, prática e acompanhamento.</h2>
+        <picture class="offer-visual">
+          <source media="(min-width: 720px)" srcset="/quiz/assets/images/journey-method-desktop.jpg">
+          <img src="/quiz/assets/images/journey-method-mobile.jpg" alt="Representação visual de um casal planejando a vida a dois e criando novas experiências." width="800" height="1000" loading="lazy" decoding="async">
+        </picture>
         <p>A Mentoria Casamento Nota 9 foi criada para quem ainda vê valor no casamento, mas não quer deixar a rotina decidir o futuro do casal.</p>
       </section>
 
