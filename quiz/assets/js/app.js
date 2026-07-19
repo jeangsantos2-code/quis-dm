@@ -129,19 +129,9 @@
           <p class="eyebrow">Diagnóstico Casamento Nota 9</p>
           <h1 id="intro-title">Seu casamento está crescendo ou apenas funcionando?</h1>
           <p class="intro-main">Talvez vocês não estejam em crise.<br>Mas a rotina pode ter ocupado o lugar do casal.</p>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="path-card muted">
-              <span>rotina</span>
-              <strong>casa funcionando</strong>
-            </div>
-            <div class="score-orbit">
-              <span>9</span>
-            </div>
-            <div class="path-card active">
-              <span>presença</span>
-              <strong>casal crescendo</strong>
-            </div>
-          </div>
+          <picture class="intro-visual">
+            <img src="/quiz/assets/images/intro-casal-presente.jpg" alt="Casal conversando com presença e fazendo planos juntos em casa." width="1280" height="800" loading="eager" decoding="async" fetchpriority="high">
+          </picture>
           <p class="support-text">Em cerca de 2 minutos, você vai responder situações do dia a dia, entender o momento de vocês e receber um primeiro passo possível.</p>
           ${primaryButton("Começar agora", 'id="start-quiz"')}
         </section>
