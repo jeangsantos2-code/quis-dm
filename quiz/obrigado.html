@@ -6,49 +6,62 @@
     <meta name="description" content="Próximos passos da Mentoria Casamento Nota 9.">
     <meta name="theme-color" content="#0f2b23">
     <title>Inscrição Recebida | Casamento Nota 9</title>
-    <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="icon" href="./assets/icons/favicon.svg?v=20260719-4" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260719-4">
   </head>
   <body>
-    <main class="legal-page thank-you-page" aria-labelledby="thank-you-title">
-      <header class="brand-header" aria-label="Identidade">
-        <span class="brand-mark" aria-hidden="true">CN9</span>
-        <span>Jean Santos | Casamento Nota 9</span>
-      </header>
+    <div class="page-shell">
+      <main class="legal-page thank-you-page" aria-labelledby="thank-you-title">
+        <header class="brand-header" aria-label="Identidade">
+          <span class="brand-mark" aria-hidden="true">CN9</span>
+          <span>Casamento Nota 9</span>
+        </header>
 
-      <p class="eyebrow">Próximos passos</p>
-      <h1 id="thank-you-title">Sua inscrição foi recebida.</h1>
-      <p>Agora vamos te orientar nos próximos passos da Mentoria Casamento Nota 9.</p>
+        <p class="eyebrow">Próximos passos</p>
+        <h1 id="thank-you-title">Sua inscrição foi recebida.</h1>
+        <p>Agora vamos te orientar nos próximos passos da Mentoria Casamento Nota 9.</p>
 
-      <div class="thankyou-grid">
-        <article>
-          <h2>Verifique seu e-mail.</h2>
-          <p>As orientações de acesso serão enviadas após a confirmação.</p>
-        </article>
-        <article>
-          <h2>Acesse o ambiente da Green.</h2>
-          <p>Seu acesso será organizado pelo fluxo da plataforma.</p>
-        </article>
-        <article>
-          <h2>Aguarde as orientações do onboarding.</h2>
-          <p>Você receberá os próximos passos para iniciar a jornada.</p>
-        </article>
-        <article>
+        <ol class="thankyou-steps">
+          <li>
+            <div>
+              <h2>Verifique seu e-mail</h2>
+              <p>As orientações de acesso serão enviadas após a confirmação.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h2>Acesse o ambiente da Green</h2>
+              <p>Seu acesso será organizado pelo fluxo da plataforma.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h2>Acompanhe as orientações do onboarding</h2>
+              <p>Você receberá os próximos passos para iniciar a jornada.</p>
+            </div>
+          </li>
+        </ol>
+
+        <aside class="thankyou-note">
           <h2>Seu cônjuge pode participar.</h2>
           <p>A participação é opcional e sem custo adicional.</p>
-        </article>
-        <article>
-          <h2>Precisa de ajuda?</h2>
-          <p>Fale com o suporte se tiver alguma dúvida sobre o acesso.</p>
-        </article>
-      </div>
+        </aside>
 
-      <a class="button button-primary" id="support-link" href="#" hidden>Falar com suporte</a>
-      <p class="privacy-note">Esta página não confirma compra. A confirmação acontece pelo processamento da Green.</p>
-    </main>
+        <a class="button button-primary" id="support-link" href="#" hidden>Falar com suporte</a>
+      </main>
 
-    <script src="./assets/js/config.js"></script>
-    <script src="./assets/js/tracking.js"></script>
+      <footer class="mini-footer">
+        <p>Esta página não confirma compra. A confirmação acontece pelo processamento da Green.</p>
+        <nav aria-label="Links legais">
+          <a href="./politica-de-privacidade.html">Política de Privacidade</a>
+          <span aria-hidden="true">·</span>
+          <a href="./termos-de-uso.html">Termos e condições</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="./assets/js/config.js?v=20260719-4"></script>
+    <script src="./assets/js/tracking.js?v=20260719-4"></script>
     <script>
       window.CN9Tracking.trackEvent("ThankYouViewed", {
         step: "thank_you",

@@ -84,19 +84,19 @@
     return `
       <header class="brand-header" aria-label="Identidade">
         <span class="brand-mark" aria-hidden="true">CN9</span>
-        <span>${config.AUTHOR_TAG}</span>
+        <span>Casamento Nota 9</span>
       </header>
     `;
   }
 
-  function legalMiniFooter() {
+  function legalMiniFooter(showDisclaimer = false) {
     return `
       <footer class="mini-footer">
-        <p>Diagnóstico Casamento Nota 9 · leitura educacional e indicativa, não clínica.</p>
+        ${showDisclaimer ? "<p>Leitura educacional e indicativa, não clínica.</p>" : ""}
         <nav aria-label="Links legais">
           <a href="/quiz/politica-de-privacidade.html">Política de Privacidade</a>
           <span aria-hidden="true">·</span>
-          <a href="/quiz/termos-de-uso.html">Termos</a>
+          <a href="/quiz/termos-de-uso.html">Termos e condições</a>
         </nav>
       </footer>
     `;
@@ -126,7 +126,6 @@
       <main class="quiz-card intro-screen" aria-labelledby="intro-title">
         ${brandHeader()}
         <section class="intro-hero">
-          <p class="eyebrow">Diagnóstico Casamento Nota 9</p>
           <h1 id="intro-title">Seu casamento está crescendo ou apenas funcionando?</h1>
           <p class="intro-main">Talvez vocês não estejam em crise.<br>Mas a rotina pode ter ocupado o lugar do casal.</p>
           <picture class="intro-visual">
@@ -135,8 +134,8 @@
           <p class="support-text">Em cerca de 2 minutos, você vai responder situações do dia a dia, entender o momento de vocês e receber um primeiro passo possível.</p>
           ${primaryButton("Começar agora", 'id="start-quiz"')}
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter(true)}
     `;
 
     tracking.trackEvent("QuizLandingViewed", { step: "landing" });
@@ -159,15 +158,15 @@
           <p class="eyebrow">Antes de responder</p>
           <h1 id="instruction-title">Responda pelo que acontece hoje.</h1>
           <p>Não responda pelo casamento ideal.<br>Responda pelo padrão real das últimas semanas.</p>
-          <div class="mini-grid" aria-label="Orientações">
+          <p class="instruction-notes" aria-label="Orientações">
             <span>Sem resposta certa.</span>
             <span>Pense na rotina real.</span>
-            <span>Leva cerca de 2 minutos.</span>
-          </div>
+            <span>Cerca de 2 minutos.</span>
+          </p>
           ${primaryButton("Entendi, começar", 'id="confirm-start"')}
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     tracking.trackEvent("QuizInstructionViewed", { step: "instruction" });
@@ -190,7 +189,6 @@
             <span class="progress-pill">Pergunta ${question.number} de 10</span>
             <span class="progress-track" aria-hidden="true"><span style="width: ${progress}%"></span></span>
           </div>
-          <p class="quiet-line">Responda pelo que vocês vivem hoje.</p>
           <h1 id="question-title">${question.prompt}</h1>
           <div class="answers" role="list">
             ${question.options.map((option, index) => answerButton(question, option, index, selected)).join("")}
@@ -200,8 +198,8 @@
             <span>Voltar</span>
           </button>
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     tracking.trackEvent("QuizQuestionViewed", {
@@ -318,8 +316,8 @@
           ${sceneVisual(interstitial.scene)}
           ${primaryButton("Continuar", 'id="continue-interstitial"')}
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     tracking.trackEvent("InterstitialViewed", {
@@ -361,8 +359,8 @@
           <p>Agora vamos organizar suas respostas para mostrar onde vocês estão hoje e qual pode ser o primeiro passo.</p>
           <div class="processing-bar" aria-hidden="true"><span></span></div>
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     tracking.trackEvent("ProcessingViewed", { step: "processing" });
@@ -376,7 +374,6 @@
       <main class="quiz-card lead-screen" aria-labelledby="lead-title">
         ${brandHeader()}
         <section class="lead-panel">
-          <p class="eyebrow">Resultado quase pronto</p>
           <h1 id="lead-title">Seu resultado está quase pronto.</h1>
           <p>Antes de te mostrar o diagnóstico, deixa eu te dizer por que essa leitura existe.</p>
 
@@ -420,8 +417,8 @@
             <p class="privacy-note">Seus dados serão usados para enviar sua leitura e continuar esta conversa.</p>
           </form>
         </section>
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     tracking.trackEvent("LeadGateViewed", { step: "lead_gate" });
@@ -520,8 +517,8 @@
         ${firstStepSection(result)}
         ${methodSections()}
         ${offerSections()}
-        ${legalMiniFooter()}
       </main>
+      ${legalMiniFooter()}
     `;
 
     setupViewedTrackers();
@@ -533,8 +530,7 @@
   function resultHero(result) {
     return `
       <section class="result-hero section-band" id="diagnostico" data-track-event="ResultViewed" data-track='{"step":"result","publicScore":${result.publicScore},"scoreScale":"${result.scoreScale}","category":"${result.category.name}","mainDimension":"${result.mainDimension}"}'>
-        <div class="score-category">${result.category.name}</div>
-        <p class="eyebrow">Sua nota hoje</p>
+        <p class="eyebrow">Seu diagnóstico hoje</p>
         <h1 id="result-title">Seu casamento parece estar em: ${result.category.name.toLowerCase()}.</h1>
         <div class="score-badge" aria-label="Nota ${result.publicScore} de 9">
           <strong>${result.publicScore}</strong><span>/9</span>
@@ -621,14 +617,16 @@
         <h2>Seu casamento já está mudando. A pergunta é para que lado.</h2>
         <p>Quando nada é cuidado, a rotina ocupa o espaço.</p>
         <p>Quando existe presença repetida, o sistema começa a responder de outro jeito.</p>
-        <picture class="movement-visual">
-          <source media="(min-width: 720px)" srcset="/quiz/assets/images/movement-crescimento-desktop.jpg">
-          <img src="/quiz/assets/images/movement-crescimento-mobile.jpg" alt="Representação visual de um casal entre a sobrecarga da rotina e a retomada da conexão." width="750" height="1000" loading="lazy" decoding="async">
-        </picture>
-        <div class="path-diagram" aria-hidden="true">
-          <div><span>rotina</span><strong>afasta</strong></div>
-          <div class="center-dot">hoje</div>
-          <div><span>presença</span><strong>cresce</strong></div>
+        <div class="movement-map" role="img" aria-label="Um casal entre duas direções: hoje, a rotina pode levar ao afastamento e a presença pode levar ao crescimento.">
+          <picture class="movement-visual">
+            <source media="(min-width: 720px)" srcset="/quiz/assets/images/movement-crescimento-desktop.jpg">
+            <img src="/quiz/assets/images/movement-crescimento-mobile.jpg" alt="" width="750" height="1000" loading="lazy" decoding="async">
+          </picture>
+          <div class="path-diagram">
+            <div><span>rotina</span><strong>afastamento</strong></div>
+            <div class="center-dot">hoje</div>
+            <div><span>presença</span><strong>crescimento</strong></div>
+          </div>
         </div>
         <p class="law-line">Não existe casamento parado.<br>Ou ele cresce, ou ele se afasta.</p>
       </section>
@@ -636,10 +634,12 @@
       <section class="section-band influence-section" data-track-event="InfluenceBlockViewed" data-track='{"step":"method","component":"InfluenceCircle"}'>
         <p class="eyebrow">Influência possível</p>
         <h2>Começa pelo que está sob sua influência</h2>
-        <div class="influence-visual">
-          <img src="/quiz/assets/images/influence-possible.png" alt="" width="900" height="900" loading="lazy" decoding="async">
-          <span class="inner">minhas escolhas e ações</span>
-          <span class="outer">resposta do outro</span>
+        <div class="influence-visual" role="img" aria-label="Círculos de influência: no centro estão minhas escolhas e respostas; ao redor, convites, presença e limites; fora do meu controle, a resposta e a decisão do outro.">
+          <span class="influence-layer influence-layer-middle" aria-hidden="true"></span>
+          <span class="influence-layer influence-layer-inner" aria-hidden="true"></span>
+          <span class="influence-label influence-label-outer">resposta e decisão do outro</span>
+          <span class="influence-label influence-label-middle">convites, presença<br>e limites</span>
+          <span class="influence-label influence-label-inner">minhas escolhas<br>e respostas</span>
         </div>
         <p class="strong-copy">Você não controla seu cônjuge.<br>Você controla sua influência.</p>
         <p>Isso inclui sua forma de responder, o espaço que você protege, os convites que faz e os padrões que decide parar de repetir.</p>
@@ -757,20 +757,8 @@
         <p class="privacy-note">Você será direcionada(o) para o checkout seguro.</p>
       </section>
 
-      <section class="section-band objections-section">
-        <h2>Perguntas que costumam aparecer</h2>
-        <div class="objection-grid">
-          ${objections().map((item) => `
-            <article>
-              <h3>${item.question}</h3>
-              <p>${item.answer}</p>
-            </article>
-          `).join("")}
-        </div>
-      </section>
-
       <section class="section-band faq-section" data-track-event="FAQViewed" data-track='{"step":"faq"}'>
-        <h2>FAQ</h2>
+        <h2>Perguntas frequentes</h2>
         ${faqs().map((item, index) => `
           <details data-faq="${index + 1}">
             <summary>${item.question}</summary>
@@ -829,16 +817,6 @@
     ];
   }
 
-  function objections() {
-    return [
-      { question: "Meu casamento não está em crise.", answer: "É justamente para esse território: casamentos que ainda têm valor, mas não querem continuar vivendo só de rotina." },
-      { question: "Meu cônjuge ainda não quer participar.", answer: "Você pode começar individualmente. Se ele ou ela quiser entrar depois, poderá participar sem custo adicional." },
-      { question: "Tenho medo de estar exagerando.", answer: "Cuidar do casamento antes da crise não é exagero. É maturidade." },
-      { question: "Tenho medo de carregar tudo sozinha(o).", answer: "A mentoria não promete controlar o outro. Ela te ajuda a começar pelo que está sob sua influência." },
-      { question: "E se nada mudar?", answer: "A metodologia trabalha o que você pode aplicar e observar. Mudança no sistema tende a acontecer com padrões consistentes, mas não é promessa automática. Por isso existe acompanhamento." }
-    ];
-  }
-
   function faqs() {
     return [
       { question: "Meu casamento não está em crise. A mentoria é para mim?", answer: "Sim, se você sente que o casamento funciona, mas o casal ficou para depois. A mentoria não é para crise severa. É para crescimento intencional." },
@@ -849,6 +827,8 @@
       { question: "Os encontros ficam gravados?", answer: config.FAQ_RECORDINGS_ENABLED ? "Sim. As informações de acesso às gravações serão enviadas dentro do ambiente da mentoria." : "Neste momento, os encontros são conduzidos ao vivo. Por isso, a presença nos encontros é recomendada." },
       { question: "Existe suporte durante os dois meses?", answer: "Sim. Você terá comunidade e suporte do time pelo WhatsApp durante a jornada." },
       { question: "Quando recebo o acesso?", answer: "Após a confirmação do pagamento, você receberá as orientações de acesso pelo fluxo definido na Green e pela comunicação da mentoria." },
+      { question: "Tenho medo de estar exagerando. Faz sentido cuidar disso agora?", answer: "Cuidar do casamento antes da crise não é exagero. É uma forma madura de proteger algo valioso enquanto ainda existe espaço para crescimento." },
+      { question: "E se nada mudar?", answer: "A metodologia trabalha o que você pode aplicar e observar. Mudanças tendem a aparecer com padrões consistentes, mas não são uma promessa automática. Por isso existe acompanhamento." },
       { question: "E se eu estiver vivendo violência, abuso ou risco grave?", answer: "A mentoria não é indicada para situações de violência, abuso, risco grave ou sofrimento psicológico severo. Nesses casos, a prioridade é buscar segurança e ajuda especializada." }
     ];
   }
