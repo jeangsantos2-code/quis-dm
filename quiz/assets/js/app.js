@@ -84,7 +84,7 @@
     return `
       <header class="brand-header" aria-label="Identidade">
         <span class="brand-mark" aria-hidden="true">CN9</span>
-        <span>Casamento Nota 9</span>
+        <span>${config.AUTHOR_TAG}</span>
       </header>
     `;
   }
@@ -123,8 +123,8 @@
   function renderIntro() {
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card intro-screen" aria-labelledby="intro-title">
-        ${brandHeader()}
         <section class="intro-hero">
           <h1 id="intro-title">Seu casamento está crescendo ou apenas funcionando?</h1>
           <p class="intro-main">Talvez vocês não estejam em crise.<br>Mas a rotina pode ter ocupado o lugar do casal.</p>
@@ -152,8 +152,8 @@
   function renderInstruction() {
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card instruction-screen" aria-labelledby="instruction-title">
-        ${brandHeader()}
         <section class="instruction-panel">
           <p class="eyebrow">Antes de responder</p>
           <h1 id="instruction-title">Responda pelo que acontece hoje.</h1>
@@ -182,8 +182,8 @@
 
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card question-screen" aria-labelledby="question-title">
-        ${brandHeader()}
         <section class="question-panel">
           <div class="progress-row">
             <span class="progress-pill">Pergunta ${question.number} de 10</span>
@@ -307,10 +307,9 @@
     const interstitial = INTERSTITIALS[state.interstitialNumber];
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card interstitial-screen" aria-labelledby="interstitial-title">
-        ${brandHeader()}
         <section class="interstitial-panel">
-          <p class="eyebrow">${interstitial.label}</p>
           <h1 id="interstitial-title">${interstitial.title}</h1>
           <p>${interstitial.text}</p>
           ${sceneVisual(interstitial.scene)}
@@ -351,8 +350,8 @@
   function renderProcessing() {
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card processing-screen" aria-labelledby="processing-title">
-        ${brandHeader()}
         <section class="processing-panel">
           <div class="processing-mark" aria-hidden="true"><span></span><span></span><span></span></div>
           <h1 id="processing-title">Preparando seu diagnóstico...</h1>
@@ -371,16 +370,16 @@
     if (!state.result) state.result = scoring.calculateResult(state.answers);
     app.className = "quiz-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="quiz-card lead-screen" aria-labelledby="lead-title">
-        ${brandHeader()}
         <section class="lead-panel">
-          <h1 id="lead-title">Seu resultado está quase pronto.</h1>
-          <p>Antes de te mostrar o diagnóstico, deixa eu te dizer por que essa leitura existe.</p>
+          <h1 id="lead-title">Seu diagnóstico está pronto.</h1>
+          <p>Antes de abrir sua leitura, conheça quem criou este método.</p>
 
           <div class="authority-layout">
             <picture class="jean-photo">
-              <source srcset="/quiz/assets/images/jean-santos.webp" type="image/webp">
-              <img src="/quiz/assets/images/jean-santos.png" alt="Foto real de Jean Santos" width="1254" height="1254" loading="eager" fetchpriority="high">
+              <source media="(min-width: 720px)" srcset="/quiz/assets/images/jean-mentoria-desktop.webp">
+              <img src="/quiz/assets/images/jean-mentoria-mobile.webp" alt="Jean Santos conduzindo uma mentoria online." width="900" height="563" loading="eager" fetchpriority="high">
             </picture>
             <div class="authority-copy">
               <h2>Eu sou Jean Santos, fundador do Casamento Nota 9.</h2>
@@ -398,8 +397,8 @@
 
           <form class="lead-form" id="lead-form" novalidate>
             <div class="form-heading">
-              <h2>Seu diagnóstico está pronto.</h2>
-              <p>Me diga onde posso enviar sua leitura e o próximo passo.</p>
+              <h2>Onde posso enviar sua leitura?</h2>
+              <p>Preencha seus dados para abrir o diagnóstico e receber o próximo passo.</p>
             </div>
             <label>
               <span>Seu nome</span>
@@ -509,8 +508,8 @@
     const result = state.result;
     app.className = "result-shell";
     app.innerHTML = `
+      ${brandHeader()}
       <main class="result-page" aria-labelledby="result-title">
-        ${brandHeader()}
         ${resultHero(result)}
         ${evidenceSection(result)}
         ${practicalSection(result)}
@@ -530,7 +529,6 @@
   function resultHero(result) {
     return `
       <section class="result-hero section-band" id="diagnostico" data-track-event="ResultViewed" data-track='{"step":"result","publicScore":${result.publicScore},"scoreScale":"${result.scoreScale}","category":"${result.category.name}","mainDimension":"${result.mainDimension}"}'>
-        <p class="eyebrow">Seu diagnóstico hoje</p>
         <h1 id="result-title">Seu casamento parece estar em: ${result.category.name.toLowerCase()}.</h1>
         <div class="score-badge" aria-label="Nota ${result.publicScore} de 9">
           <strong>${result.publicScore}</strong><span>/9</span>
@@ -646,33 +644,6 @@
         <p>Não é carregar o casamento sozinho. É parar de esperar tudo começar pelo outro.</p>
       </section>
 
-      <section class="section-band" data-track-event="MethodCapabilitiesViewed" data-track='{"step":"method","capabilitiesShown":["escuta_resposta","tempo_presenca","planos_experiencias"]}'>
-        <p class="eyebrow">Três capacidades</p>
-        <h2>A jornada trabalha três capacidades que sustentam o crescimento do casal.</h2>
-        <div class="capability-grid">
-          <article>
-            <span aria-hidden="true">01</span>
-            <h3>Escuta e resposta</h3>
-            <p>Perceber, compreender e responder às tentativas de conexão do cônjuge.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">02</span>
-            <h3>Tempo e presença</h3>
-            <p>Proteger tempo, atenção, energia e cuidado para a relação.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">03</span>
-            <h3>Planos e experiências a dois</h3>
-            <p>Criar experiências, projetos e expectativa positiva para o futuro do casal.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section-band offer-bridge" data-track-event="OfferBridgeViewed" data-track='{"step":"offer_bridge"}'>
-        <h2>Seu diagnóstico mostrou onde começar.</h2>
-        <p>Agora a pergunta é: como transformar esse primeiro passo em prática, semana após semana?</p>
-        <a class="button button-secondary" href="#oferta">Ver como funciona a mentoria</a>
-      </section>
     `;
   }
 
@@ -680,7 +651,7 @@
     return `
       <section class="section-band offer-hero" id="oferta" data-track-event="OfferViewed" data-track='{"step":"offer","offer":"Mentoria Casamento Nota 9"}'>
         <p class="eyebrow">Seu próximo passo</p>
-        <h2>Uma jornada para sair do automático com direção, prática e acompanhamento.</h2>
+        <h2>Seu diagnóstico mostrou onde começar. A mentoria transforma esse movimento em prática acompanhada.</h2>
         <picture class="offer-visual">
           <source media="(min-width: 720px)" srcset="/quiz/assets/images/journey-method-desktop.jpg">
           <img src="/quiz/assets/images/journey-method-mobile.jpg" alt="Representação visual de um casal planejando a vida a dois e criando novas experiências." width="800" height="1000" loading="lazy" decoding="async">
@@ -701,7 +672,13 @@
       </section>
 
       <section class="section-band" data-track-event="OfferWorkViewed" data-track='{"step":"offer","component":"WorkCards"}'>
+        <p class="eyebrow">Na prática</p>
         <h2>O que você vai trabalhar durante a jornada</h2>
+        <p>As capacidades centrais do método aparecem em cinco frentes de aplicação, com direção, prática e acompanhamento.</p>
+        <picture class="mentorship-visual">
+          <source media="(min-width: 720px)" srcset="/quiz/assets/images/mentoria-online-desktop.webp">
+          <img src="/quiz/assets/images/mentoria-online-mobile.webp" alt="Participante acompanhando uma mentoria online em grupo e fazendo anotações." width="900" height="563" loading="lazy" decoding="async">
+        </picture>
         <div class="work-grid">
           ${workCards().map((card) => `
             <article>
