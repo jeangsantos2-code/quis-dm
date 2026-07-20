@@ -178,7 +178,7 @@
   function renderQuestion() {
     const question = scoring.QUESTIONS[state.questionIndex];
     const selected = state.answers[String(question.number)]?.answerIndex || null;
-    const progress = Math.max(4, Math.round((question.number - 1) / 10 * 100));
+    const progress = Math.round(question.number / 10 * 100);
 
     app.className = "quiz-shell";
     app.innerHTML = `
@@ -187,7 +187,7 @@
         <section class="question-panel">
           <div class="progress-row">
             <span class="progress-pill">Pergunta ${question.number} de 10</span>
-            <span class="progress-track" aria-hidden="true"><span style="width: ${progress}%"></span></span>
+            <span class="progress-track" role="progressbar" aria-label="Progresso do questionário" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width: ${progress}%"></span></span>
           </div>
           <h1 id="question-title">${question.prompt}</h1>
           <div class="answers" role="list">
@@ -314,6 +314,10 @@
           <p>${interstitial.text}</p>
           ${sceneVisual(interstitial.scene)}
           ${primaryButton("Continuar", 'id="continue-interstitial"')}
+          <button class="back-button" id="back-interstitial" type="button">
+            <span aria-hidden="true">&larr;</span>
+            <span>Voltar</span>
+          </button>
         </section>
       </main>
       ${legalMiniFooter()}
@@ -334,6 +338,15 @@
       });
       const nextQuestionIndex = interstitial.number === 1 ? 3 : interstitial.number === 2 ? 6 : 8;
       setScreen("question", { questionIndex: nextQuestionIndex });
+    });
+
+    document.getElementById("back-interstitial").addEventListener("click", () => {
+      tracking.trackEvent("InterstitialBackClicked", {
+        step: "interstitial",
+        interstitialNumber: interstitial.number,
+        theme: interstitial.theme
+      });
+      setScreen("question", { questionIndex: state.questionIndex });
     });
   }
 

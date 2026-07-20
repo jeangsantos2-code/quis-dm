@@ -364,26 +364,19 @@ input:focus-visible {
 
 .progress-row {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 12px;
-  align-items: center;
+  gap: 8px;
   margin-bottom: 18px;
 }
 
 .progress-pill {
-  min-width: 108px;
-  display: inline-flex;
-  justify-content: center;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--verde);
-  font-size: 0.85rem;
-  background: rgba(255, 250, 241, 0.86);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .progress-track {
-  height: 9px;
+  width: 100%;
+  height: 7px;
   overflow: hidden;
   border: 1px solid rgba(15, 43, 35, 0.12);
   border-radius: 999px;
@@ -466,6 +459,7 @@ input:focus-visible {
 .back-button {
   width: max-content;
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: 8px;
   margin-top: 18px;
@@ -1419,10 +1413,6 @@ blockquote {
   .brand-header {
     padding-inline: 2px;
     font-size: 0.78rem;
-  }
-
-  .progress-row {
-    grid-template-columns: 1fr;
   }
 
   .answer-option {
