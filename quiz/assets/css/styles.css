@@ -713,6 +713,12 @@ input:focus-visible {
   margin-bottom: 0;
 }
 
+.result-page .eyebrow {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+}
+
 .result-hero {
   border-top: 0;
   text-align: center;
