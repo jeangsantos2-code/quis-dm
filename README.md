@@ -70,7 +70,7 @@ Dashboard Google Sheets:
 
 - https://docs.google.com/spreadsheets/d/1t3R57-jZsPCVMc0atfkvCm-EHjFxOHYi7mVGg0xQqiw/edit
 
-O dashboard possui uma visão macro do funil e uma visão detalhada com ranking dos 10 maiores gargalos. Os dados detalhados devem ser avaliados somente depois de acumular volume suficiente de sessões na versão instrumentada.
+O dashboard possui uma visão macro do funil, uma visão detalhada com ranking dos 10 maiores gargalos e uma área de atribuição por `source_post`. Essa área compara visitas, inícios, conclusões, leads, checkout, compras e conversão por post de origem. Os dados detalhados devem ser avaliados somente depois de acumular volume suficiente de sessões na versão instrumentada.
 
 Dashboard Notion criado:
 

@@ -17,6 +17,8 @@ subscriber_id=
 cuid=
 ```
 
+O dashboard já possui a área `Atribuição por post`, mas ela permanecerá em `Aguardando origem completa da Youze` até que `source_post` seja enviado. Quando isso acontecer, o painel passará a comparar automaticamente visitas, inícios, conclusões, leads, checkout e compras por post.
+
 2. Fazer venda real para validar se a Green devolve `leadId` e `sessionId` no webhook.
 
 O quiz já envia `leadId` e `sessionId` para o checkout. O webhook da Green já está preparado para capturar esses campos se eles voltarem como campos diretos, metadata ou dentro de `data.metadata`.

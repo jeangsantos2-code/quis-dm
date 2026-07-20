@@ -10,6 +10,9 @@ Na aba `Dashboard`:
 - `Gargalo detalhado` mostra a maior perda medida;
 - a tabela inferior compara todas as perguntas, intersticios e secoes da oferta;
 - o grafico `Top 10 gargalos detalhados` ordena as maiores perdas entre etapas consecutivas.
+- a area `Atribuicao por post` compara visitas, inicios, conclusoes, leads, checkout, compras e conversao por `source_post`.
+
+Enquanto a Youze nao enviar `source_post` no link, essa area mostra `Aguardando origem completa da Youze`. Isso evita atribuir trafego sem evidencia e torna a pendencia visivel no proprio dashboard.
 
 O arquivo `docs/google-apps-script.js` e o receptor que deve ser publicado como Web App no Apps Script. Ele usa a propriedade de script `WEBHOOK_SECRET` e grava na planilha sem expor uma credencial de conta Google na Vercel.
 
