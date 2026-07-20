@@ -483,6 +483,10 @@ input:focus-visible {
   color: var(--verde);
 }
 
+.interstitial-panel .back-button {
+  align-self: center;
+}
+
 .scene-visual {
   display: block;
   aspect-ratio: 4 / 3;
