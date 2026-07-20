@@ -395,7 +395,7 @@
               <img src="/quiz/assets/images/jean-mentoria-mobile.webp" alt="Jean Santos conduzindo uma mentoria online." width="900" height="563" loading="eager" fetchpriority="high">
             </picture>
             <div class="authority-copy">
-              <h2>Eu sou Jean Santos, fundador do Casamento Nota 9.</h2>
+              <h2>Eu sou Jean Santos, fundador do Casamento Nota&nbsp;9.</h2>
               <p>Criei este diagnóstico para casais que não estão em crise, mas percebem que a rotina começou a ocupar o lugar do casal.</p>
               <p class="thesis-line">Ausência de crise nunca foi prova de presença de saúde.</p>
             </div>
@@ -734,7 +734,7 @@
 
       <section class="section-band pricing-section" data-track-event="PriceBlockViewed" data-track='{"step":"offer","priceCash":497,"installments":12,"installmentValue":51.10}'>
         <p class="eyebrow">Investimento da mentoria</p>
-        <h2>R$497 à vista</h2>
+        <h2><span>R$497</span><small>à vista</small></h2>
         <p class="installments">ou 12x de R$51,10</p>
         <p>Seu cônjuge pode participar sem custo adicional.</p>
         <ul>

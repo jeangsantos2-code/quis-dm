@@ -1167,8 +1167,30 @@ blockquote {
 }
 
 .pricing-section h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.16em;
   margin-bottom: 4px;
   font-size: 3.2rem;
+}
+
+.pricing-section h2 small {
+  font-family: var(--sans);
+  font-size: 0.36em;
+  font-weight: 700;
+}
+
+.pricing-section {
+  text-align: center;
+}
+
+.pricing-section ul {
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: left;
 }
 
 .installments {
