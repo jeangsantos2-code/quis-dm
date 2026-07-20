@@ -17,6 +17,9 @@
   --radius-sm: 8px;
   --serif: Georgia, "Times New Roman", serif;
   --sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --panel-inline: 20px;
+  --panel-block-start: 24px;
+  --panel-block-end: 20px;
 }
 
 * {
@@ -202,13 +205,12 @@ h3 {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--panel-block-start) var(--panel-inline) var(--panel-block-end);
 }
 
 .intro-hero {
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  padding-top: 4px;
 }
 
 .intro-hero h1 {
@@ -333,7 +335,7 @@ input:focus-visible {
 }
 
 .instruction-panel {
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
 }
 
@@ -358,8 +360,7 @@ input:focus-visible {
 }
 
 .question-panel {
-  justify-content: center;
-  padding-top: 14px;
+  justify-content: flex-start;
 }
 
 .progress-row {
@@ -469,7 +470,11 @@ input:focus-visible {
   background: transparent;
 }
 
-.interstitial-panel,
+.interstitial-panel {
+  justify-content: flex-start;
+  text-align: center;
+}
+
 .processing-panel {
   justify-content: center;
   text-align: center;
@@ -484,7 +489,7 @@ input:focus-visible {
 }
 
 .interstitial-panel .back-button {
-  align-self: center;
+  align-self: flex-start;
 }
 
 .scene-visual {
@@ -568,7 +573,6 @@ input:focus-visible {
 }
 
 .lead-panel {
-  padding-top: 10px;
   text-align: center;
 }
 
@@ -1358,6 +1362,12 @@ blockquote {
 }
 
 @media (min-width: 720px) {
+  :root {
+    --panel-inline: 28px;
+    --panel-block-start: 28px;
+    --panel-block-end: 28px;
+  }
+
   .quiz-shell,
   .result-shell {
     padding: 32px;
@@ -1411,6 +1421,12 @@ blockquote {
 }
 
 @media (max-width: 390px) {
+  :root {
+    --panel-inline: 16px;
+    --panel-block-start: 20px;
+    --panel-block-end: 16px;
+  }
+
   .quiz-shell,
   .result-shell {
     padding: 10px;
@@ -1439,7 +1455,7 @@ blockquote {
   .interstitial-panel,
   .processing-panel,
   .lead-panel {
-    padding: 16px;
+    padding: var(--panel-block-start) var(--panel-inline) var(--panel-block-end);
   }
 
   .brand-header {

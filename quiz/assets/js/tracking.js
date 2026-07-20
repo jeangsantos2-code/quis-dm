@@ -119,10 +119,11 @@
     return readJson("cn9_result", {});
   }
 
-  function shouldTrackUnique(eventName) {
-    if (!UNIQUE_EVENTS.has(eventName)) return true;
+  function shouldTrackUnique(eventName, data) {
+    const customKey = data?.dedupeKey ? String(data.dedupeKey) : "";
+    if (!UNIQUE_EVENTS.has(eventName) && !customKey) return true;
     const sessionId = getSessionId();
-    const key = `cn9_once_${sessionId}_${eventName}`;
+    const key = `cn9_once_${sessionId}_${customKey || eventName}`;
     if (sessionStorage.getItem(key)) return false;
     sessionStorage.setItem(key, "1");
     return true;
@@ -184,7 +185,7 @@
   }
 
   async function trackEvent(eventName, data = {}) {
-    if (!shouldTrackUnique(eventName)) return null;
+    if (!shouldTrackUnique(eventName, data)) return null;
     const event = buildEvent(eventName, data);
 
     trackMeta(eventName);

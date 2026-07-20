@@ -22,17 +22,20 @@ cuid=
 O quiz já envia `leadId` e `sessionId` para o checkout. O webhook da Green já está preparado para capturar esses campos se eles voltarem como campos diretos, metadata ou dentro de `data.metadata`.
 Também está preparado para receber `publicScore`, `category`, `mainDimension`, `cta` e origem completa quando a Green devolver esses parâmetros.
 
+3. Acumular volume real na nova instrumentação antes de tomar decisões por pergunta ou seção.
+
+Uma sessão isolada serve para validar o encadeamento técnico, mas não para concluir que uma etapa é um gargalo. O dashboard detalhado já está pronto para comparar sessões únicas assim que o tráfego entrar.
+
 ## Pendências de publicação
 
 1. Configurar `NOTION_TOKEN` na Vercel.
 2. Configurar `GREEN_WEBHOOK_TOKEN` na Vercel e na Green.
 3. Confirmar se a Green preserva metadata/query params no webhook.
-4. Validar deploy automático da Vercel no próximo push para `main`.
-5. Fazer um teste real de compra com valor controlado.
-6. Validar no Notion se as bases `CN9 - Leads`, `CN9 - Eventos` e `CN9 - Vendas` receberam os dados corretamente.
-7. Publicar `docs/google-apps-script.js` como Web App e configurar `GOOGLE_SHEETS_WEBHOOK_URL` e `GOOGLE_SHEETS_WEBHOOK_SECRET` na Vercel.
+4. Fazer um teste real de compra com valor controlado.
+5. Validar no Notion se as bases `CN9 - Leads`, `CN9 - Eventos` e `CN9 - Vendas` receberam os dados corretamente.
+6. Opcional: republicar o Apps Script com a versão atual de `docs/google-apps-script.js` para preencher diretamente as colunas detalhadas `W:AC`. O dashboard já lê os mesmos campos no JSON da coluna `V`, então esta melhoria não bloqueia a análise.
 
-O dashboard Google Sheets já está estruturado com funil, gargalo, origem, campanha, categoria e dimensão principal. A publicação do Apps Script é a única etapa restante para a alimentação automática; o conector do Drive usado pelo Codex permite editar a planilha, mas não fornece uma credencial exportável para o runtime da Vercel.
+O dashboard Google Sheets está recebendo dados automaticamente e já possui funil macro, funil detalhado, gargalos, origem, campanha, categoria e dimensão principal.
 
 ## Produção Vercel
 

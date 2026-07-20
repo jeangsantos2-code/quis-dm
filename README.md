@@ -34,6 +34,13 @@ Eventos principais para decisão:
 O checkout recebe `sessionId`, `leadId`, UTMs, `cta`, `publicScore`, `category` e `mainDimension`.
 As bases do Notion têm colunas separadas para origem completa, campanha, post, nota, categoria, dimensão e status de compra.
 
+O acompanhamento detalhado usa dois eventos padronizados sem remover os eventos históricos:
+
+- `FunnelStageViewed`: uma visualização única por sessão para cada etapa.
+- `FunnelStageExited`: tempo aproximado na etapa, motivo da saída e indicação de abandono potencial.
+
+As etapas possuem `stageId`, `stageOrder`, `stageGroup` e `stageLabel`. O mapa cobre entrada, orientações, 10 perguntas, 3 interstícios, processamento, captura, todas as seções do diagnóstico e da oferta, checkout e página de obrigado. O dashboard calcula conversão e perda entre etapas por sessões únicas.
+
 ## Configuração pública
 
 Edite `quiz/assets/js/config.js`:
@@ -62,6 +69,8 @@ Use `.env.example` como referência.
 Dashboard Google Sheets:
 
 - https://docs.google.com/spreadsheets/d/1t3R57-jZsPCVMc0atfkvCm-EHjFxOHYi7mVGg0xQqiw/edit
+
+O dashboard possui uma visão macro do funil e uma visão detalhada com ranking dos 10 maiores gargalos. Os dados detalhados devem ser avaliados somente depois de acumular volume suficiente de sessões na versão instrumentada.
 
 Dashboard Notion criado:
 

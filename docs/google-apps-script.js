@@ -36,7 +36,9 @@ function appendEvent(spreadsheet, event) {
     origin.utm_source || origin.ref || "", origin.utm_medium || "", origin.utm_campaign || origin.campaign_id || "",
     origin.utm_content || "", origin.utm_term || "", origin.source_post || "", origin.subscriber_id || "", origin.cuid || "",
     data.ctaLocation || "", numberOrBlank(data.publicScore || data.score), data.category || "", data.mainDimension || data.dimension || "",
-    `${event.device?.viewportWidth || ""}x${event.device?.viewportHeight || ""}`, event.device?.userAgent || "", JSON.stringify(data)
+    `${event.device?.viewportWidth || ""}x${event.device?.viewportHeight || ""}`, event.device?.userAgent || "", JSON.stringify(data),
+    data.stageId || "", numberOrBlank(data.stageOrder), data.stageGroup || "", data.stageLabel || "",
+    numberOrBlank(data.durationSeconds), data.exitReason || "", Boolean(data.potentialAbandonment)
   ]);
 }
 

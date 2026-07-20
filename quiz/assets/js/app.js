@@ -49,6 +49,43 @@
     }
   };
 
+  const QUESTION_STAGE_ORDER = {
+    1: 2,
+    2: 3,
+    3: 4,
+    4: 6,
+    5: 7,
+    6: 8,
+    7: 10,
+    8: 11,
+    9: 13,
+    10: 14
+  };
+
+  const INTERSTITIAL_STAGE_ORDER = { 1: 5, 2: 9, 3: 12 };
+
+  const STAGES = {
+    landing: { stageId: "landing", stageOrder: 0, stageGroup: "entry", stageLabel: "Visita ao quiz" },
+    instruction: { stageId: "instruction", stageOrder: 1, stageGroup: "entry", stageLabel: "Orientações" },
+    processing: { stageId: "processing", stageOrder: 15, stageGroup: "lead", stageLabel: "Processamento" },
+    leadGate: { stageId: "lead_gate", stageOrder: 16, stageGroup: "lead", stageLabel: "Captura de dados" },
+    result: { stageId: "diagnostic_result", stageOrder: 17, stageGroup: "diagnostic", stageLabel: "Resultado e nota" },
+    evidence: { stageId: "diagnostic_evidence", stageOrder: 18, stageGroup: "diagnostic", stageLabel: "Leitura das respostas" },
+    reflection: { stageId: "diagnostic_reflection", stageOrder: 19, stageGroup: "diagnostic", stageLabel: "Diagnóstico na prática" },
+    firstStep: { stageId: "diagnostic_first_step", stageOrder: 20, stageGroup: "diagnostic", stageLabel: "Primeiro passo" },
+    movement: { stageId: "method_movement", stageOrder: 21, stageGroup: "method", stageLabel: "Crescimento ou afastamento" },
+    influence: { stageId: "method_influence", stageOrder: 22, stageGroup: "method", stageLabel: "Influência possível" },
+    offer: { stageId: "offer_intro", stageOrder: 23, stageGroup: "offer", stageLabel: "Apresentação da mentoria" },
+    offerFit: { stageId: "offer_fit", stageOrder: 24, stageGroup: "offer", stageLabel: "Para quem é a jornada" },
+    offerWork: { stageId: "offer_work", stageOrder: 25, stageGroup: "offer", stageLabel: "Conteúdo da jornada" },
+    offerHow: { stageId: "offer_how", stageOrder: 26, stageGroup: "offer", stageLabel: "Como funciona" },
+    socialProof: { stageId: "social_proof", stageOrder: 27, stageGroup: "offer", stageLabel: "Depoimentos" },
+    price: { stageId: "price", stageOrder: 28, stageGroup: "offer", stageLabel: "Investimento" },
+    faq: { stageId: "faq", stageOrder: 29, stageGroup: "offer", stageLabel: "Perguntas frequentes" },
+    finalCta: { stageId: "final_cta", stageOrder: 30, stageGroup: "offer", stageLabel: "Chamada final" },
+    checkout: { stageId: "checkout", stageOrder: 31, stageGroup: "checkout", stageLabel: "Clique no checkout" }
+  };
+
   const state = {
     screen: "intro",
     questionIndex: 0,
@@ -59,7 +96,9 @@
     selectedTimer: null,
     leadFormStarted: false,
     completedFields: new Set(),
-    viewedObserver: null
+    viewedObserver: null,
+    activeStage: null,
+    activeStageStartedAt: 0
   };
 
   function readAnswers() {
@@ -74,10 +113,77 @@
     sessionStorage.setItem("cn9_answers", JSON.stringify(state.answers));
   }
 
-  function setScreen(screen, options = {}) {
+  function setScreen(screen, options = {}, exitReason = "advanced") {
+    finishActiveStage(exitReason, exitReason !== "back");
     state.screen = screen;
     Object.assign(state, options);
     render();
+  }
+
+  function getScreenStage() {
+    if (state.screen === "intro") return STAGES.landing;
+    if (state.screen === "instruction") return STAGES.instruction;
+    if (state.screen === "processing") return STAGES.processing;
+    if (state.screen === "lead_gate") return STAGES.leadGate;
+    if (state.screen === "question") {
+      const question = scoring.QUESTIONS[state.questionIndex];
+      return {
+        stageId: `question_${question.number}`,
+        stageOrder: QUESTION_STAGE_ORDER[question.number],
+        stageGroup: "quiz",
+        stageLabel: `Pergunta ${question.number}`,
+        questionNumber: question.number,
+        questionKey: question.key,
+        dimension: question.dimension
+      };
+    }
+    if (state.screen === "interstitial") {
+      const interstitial = INTERSTITIALS[state.interstitialNumber];
+      return {
+        stageId: `interstitial_${interstitial.number}`,
+        stageOrder: INTERSTITIAL_STAGE_ORDER[interstitial.number],
+        stageGroup: "interstitial",
+        stageLabel: `Interstício ${interstitial.number}`,
+        interstitialNumber: interstitial.number,
+        theme: interstitial.theme
+      };
+    }
+    return null;
+  }
+
+  function trackStageViewed(stage) {
+    tracking.trackEvent("FunnelStageViewed", {
+      ...stage,
+      step: stage.stageId,
+      dedupeKey: `stage_view:${stage.stageId}`
+    });
+  }
+
+  function beginStage(stage) {
+    if (!stage || state.activeStage?.stageId === stage.stageId) return;
+    if (state.activeStage) finishActiveStage("next_stage", true);
+    state.activeStage = stage;
+    state.activeStageStartedAt = Date.now();
+    trackStageViewed(stage);
+  }
+
+  function finishActiveStage(exitReason, completed, potentialAbandonment = false) {
+    if (!state.activeStage) return;
+    const durationSeconds = Math.max(0, Math.round((Date.now() - state.activeStageStartedAt) / 100) / 10);
+    tracking.trackEvent("FunnelStageExited", {
+      ...state.activeStage,
+      step: state.activeStage.stageId,
+      durationSeconds,
+      exitReason,
+      completed: Boolean(completed),
+      potentialAbandonment: Boolean(potentialAbandonment)
+    });
+    state.activeStage = null;
+    state.activeStageStartedAt = 0;
+  }
+
+  function stageAttributes(stage) {
+    return `data-stage-id="${stage.stageId}" data-stage-order="${stage.stageOrder}" data-stage-group="${stage.stageGroup}" data-stage-label="${stage.stageLabel}"`;
   }
 
   function brandHeader() {
@@ -117,6 +223,9 @@
     if (state.screen === "lead_gate") renderLeadGate();
     if (state.screen === "result") renderResult();
 
+    const screenStage = getScreenStage();
+    if (screenStage) beginStage(screenStage);
+
     window.scrollTo({ top: 0, behavior: "instant" });
   }
 
@@ -145,7 +254,7 @@
       state.quizStartedAt = Date.now();
       sessionStorage.setItem("cn9_quiz_started_at", String(state.quizStartedAt));
       tracking.trackEvent("QuizStarted", { step: "landing", buttonText: "Começar agora" });
-      setScreen("instruction");
+      setScreen("instruction", {}, "quiz_started");
     });
   }
 
@@ -171,7 +280,7 @@
 
     tracking.trackEvent("QuizInstructionViewed", { step: "instruction" });
     document.getElementById("confirm-start").addEventListener("click", () => {
-      setScreen("question", { questionIndex: 0 });
+      setScreen("question", { questionIndex: 0 }, "instructions_confirmed");
     });
   }
 
@@ -274,33 +383,43 @@
         category: state.result.category.name,
         mainDimension: state.result.mainDimension
       }));
-      setScreen("processing");
+      setScreen("processing", {}, "quiz_completed");
       return;
     }
 
     if (questionNumber === 3) {
-      setScreen("interstitial", { interstitialNumber: 1 });
+      setScreen("interstitial", { interstitialNumber: 1 }, "question_answered");
       return;
     }
     if (questionNumber === 6) {
-      setScreen("interstitial", { interstitialNumber: 2 });
+      setScreen("interstitial", { interstitialNumber: 2 }, "question_answered");
       return;
     }
     if (questionNumber === 8) {
-      setScreen("interstitial", { interstitialNumber: 3 });
+      setScreen("interstitial", { interstitialNumber: 3 }, "question_answered");
       return;
     }
 
-    setScreen("question", { questionIndex: state.questionIndex + 1 });
+    setScreen("question", { questionIndex: state.questionIndex + 1 }, "question_answered");
   }
 
   function goBack() {
     if (state.questionIndex <= 0) {
-      setScreen("instruction");
+      tracking.trackEvent("QuizBackClicked", {
+        step: "question",
+        fromQuestion: 1,
+        destination: "instruction"
+      });
+      setScreen("instruction", {}, "back");
       return;
     }
 
-    setScreen("question", { questionIndex: state.questionIndex - 1 });
+    tracking.trackEvent("QuizBackClicked", {
+      step: "question",
+      fromQuestion: state.questionIndex + 1,
+      destination: `question_${state.questionIndex}`
+    });
+    setScreen("question", { questionIndex: state.questionIndex - 1 }, "back");
   }
 
   function renderInterstitial() {
@@ -337,7 +456,7 @@
         theme: interstitial.theme
       });
       const nextQuestionIndex = interstitial.number === 1 ? 3 : interstitial.number === 2 ? 6 : 8;
-      setScreen("question", { questionIndex: nextQuestionIndex });
+      setScreen("question", { questionIndex: nextQuestionIndex }, "interstitial_continued");
     });
 
     document.getElementById("back-interstitial").addEventListener("click", () => {
@@ -346,7 +465,7 @@
         interstitialNumber: interstitial.number,
         theme: interstitial.theme
       });
-      setScreen("question", { questionIndex: state.questionIndex });
+      setScreen("question", { questionIndex: state.questionIndex }, "back");
     });
   }
 
@@ -376,7 +495,7 @@
     `;
 
     tracking.trackEvent("ProcessingViewed", { step: "processing" });
-    setTimeout(() => setScreen("lead_gate"), 1800);
+    setTimeout(() => setScreen("lead_gate", {}, "processing_completed"), 1800);
   }
 
   function renderLeadGate() {
@@ -489,7 +608,7 @@
       });
 
       sessionStorage.setItem("cn9_lead_captured", "1");
-      setScreen("result");
+      setScreen("result", {}, "lead_captured");
     });
   }
 
@@ -541,7 +660,7 @@
 
   function resultHero(result) {
     return `
-      <section class="result-hero section-band" id="diagnostico" data-track-event="ResultViewed" data-track='{"step":"result","publicScore":${result.publicScore},"scoreScale":"${result.scoreScale}","category":"${result.category.name}","mainDimension":"${result.mainDimension}"}'>
+      <section class="result-hero section-band" id="diagnostico" ${stageAttributes(STAGES.result)} data-track-event="ResultViewed" data-track='{"step":"result","publicScore":${result.publicScore},"scoreScale":"${result.scoreScale}","category":"${result.category.name}","mainDimension":"${result.mainDimension}"}'>
         <h1 id="result-title">Seu casamento parece estar em: ${result.category.name.toLowerCase()}.</h1>
         <div class="score-badge" aria-label="Nota ${result.publicScore} de 9">
           <strong>${result.publicScore}</strong><span>/9</span>
@@ -563,7 +682,7 @@
 
   function evidenceSection(result) {
     return `
-      <section class="section-band" data-track-event="DiagnosticEvidenceViewed" data-track='{"step":"evidence","evidenceCount":3,"mainDimension":"${result.mainDimension}"}'>
+      <section class="section-band" ${stageAttributes(STAGES.evidence)} data-track-event="DiagnosticEvidenceViewed" data-track='{"step":"evidence","evidenceCount":3,"mainDimension":"${result.mainDimension}"}'>
         <p class="eyebrow">Leitura das respostas</p>
         <h2>Suas respostas mostram que:</h2>
         <div class="evidence-grid">
@@ -575,7 +694,7 @@
 
   function practicalSection(result) {
     return `
-      <section class="section-band" data-track-event="DiagnosticReflectionViewed" data-track='{"step":"reflection","category":"${result.category.name}"}'>
+      <section class="section-band" ${stageAttributes(STAGES.reflection)} data-track-event="DiagnosticReflectionViewed" data-track='{"step":"reflection","category":"${result.category.name}"}'>
         <p class="eyebrow">Na prática</p>
         <h2>O que isso quer dizer na prática</h2>
         <div class="reading-grid">
@@ -606,7 +725,7 @@
 
   function firstStepSection(result) {
     return `
-      <section class="section-band first-step" data-track-event="FirstStepViewed" data-track='{"step":"first_step","mainDimension":"${result.mainDimension}","firstStepType":"${result.firstStep.type}"}'>
+      <section class="section-band first-step" ${stageAttributes(STAGES.firstStep)} data-track-event="FirstStepViewed" data-track='{"step":"first_step","mainDimension":"${result.mainDimension}","firstStepType":"${result.firstStep.type}"}'>
         <p class="eyebrow">Seu primeiro passo</p>
         <h2>Comece por onde existe mais espaço para influência agora.</h2>
         <article class="first-step-card">
@@ -623,7 +742,7 @@
 
   function methodSections() {
     return `
-      <section class="section-band movement-section" data-track-event="MethodViewed" data-track='{"step":"method","component":"MovementBridge"}'>
+      <section class="section-band movement-section" ${stageAttributes(STAGES.movement)} data-track-event="MethodViewed" data-track='{"step":"method","component":"MovementBridge"}'>
         <p class="eyebrow">O casamento não fica parado</p>
         <h2>Seu casamento já está mudando. A pergunta é para que lado.</h2>
         <p>Quando nada é cuidado, a rotina ocupa o espaço.</p>
@@ -642,7 +761,7 @@
         <p class="law-line">Não existe casamento parado.<br>Ou ele cresce, ou ele se afasta.</p>
       </section>
 
-      <section class="section-band influence-section" data-track-event="InfluenceBlockViewed" data-track='{"step":"method","component":"InfluenceCircle"}'>
+      <section class="section-band influence-section" ${stageAttributes(STAGES.influence)} data-track-event="InfluenceBlockViewed" data-track='{"step":"method","component":"InfluenceCircle"}'>
         <p class="eyebrow">Influência possível</p>
         <h2>Começa pelo que está sob sua influência</h2>
         <div class="influence-visual" role="img" aria-label="Círculos de influência: no centro estão minhas escolhas e respostas; ao redor, convites, presença e limites; fora do meu controle, a resposta e a decisão do outro.">
@@ -662,7 +781,7 @@
 
   function offerSections() {
     return `
-      <section class="section-band offer-hero" id="oferta" data-track-event="OfferViewed" data-track='{"step":"offer","offer":"Mentoria Casamento Nota 9"}'>
+      <section class="section-band offer-hero" id="oferta" ${stageAttributes(STAGES.offer)} data-track-event="OfferViewed" data-track='{"step":"offer","offer":"Mentoria Casamento Nota 9"}'>
         <p class="eyebrow">Seu próximo passo</p>
         <h2>Seu diagnóstico mostrou onde começar. A mentoria transforma esse movimento em prática acompanhada.</h2>
         <picture class="offer-visual">
@@ -672,7 +791,7 @@
         <p>A Mentoria Casamento Nota 9 foi criada para quem ainda vê valor no casamento, mas não quer deixar a rotina decidir o futuro do casal.</p>
       </section>
 
-      <section class="section-band" data-track-event="OfferFitViewed" data-track='{"step":"offer","component":"FitChecklist"}'>
+      <section class="section-band" ${stageAttributes(STAGES.offerFit)} data-track-event="OfferFitViewed" data-track='{"step":"offer","component":"FitChecklist"}'>
         <h2>Essa jornada faz sentido para você se...</h2>
         <ul class="fit-list">
           <li>O casamento não está em crise, mas o casal ficou para depois.</li>
@@ -684,7 +803,7 @@
         </ul>
       </section>
 
-      <section class="section-band" data-track-event="OfferWorkViewed" data-track='{"step":"offer","component":"WorkCards"}'>
+      <section class="section-band" ${stageAttributes(STAGES.offerWork)} data-track-event="OfferWorkViewed" data-track='{"step":"offer","component":"WorkCards"}'>
         <p class="eyebrow">Na prática</p>
         <h2>O que você vai trabalhar durante a jornada</h2>
         <p>As capacidades centrais do método aparecem em cinco frentes de aplicação, com direção, prática e acompanhamento.</p>
@@ -702,7 +821,7 @@
         </div>
       </section>
 
-      <section class="section-band" data-track-event="OfferHowItWorksViewed" data-track='{"step":"offer","component":"HowItWorksTimeline"}'>
+      <section class="section-band" ${stageAttributes(STAGES.offerHow)} data-track-event="OfferHowItWorksViewed" data-track='{"step":"offer","component":"HowItWorksTimeline"}'>
         <h2>Como funciona</h2>
         <div class="timeline">
           ${timelineItems().map((item, index) => `
@@ -718,7 +837,7 @@
         <p class="value-statement">Você não recebe aulas soltas.<br>Você entra em uma jornada com direção, prática e acompanhamento.</p>
       </section>
 
-      <section class="section-band" data-track-event="SocialProofViewed" data-track='{"step":"offer","testimonialsShown":3,"context":"acompanhamentos_anteriores"}'>
+      <section class="section-band" ${stageAttributes(STAGES.socialProof)} data-track-event="SocialProofViewed" data-track='{"step":"offer","testimonialsShown":3,"context":"acompanhamentos_anteriores"}'>
         <h2>Quem já passou pelo trabalho de Jean</h2>
         <div class="testimonial-grid">
           ${testimonials().map((item) => `
@@ -732,7 +851,7 @@
         <p class="context-note">Relatos de acompanhamentos anteriores conduzidos por Jean Santos.</p>
       </section>
 
-      <section class="section-band pricing-section" data-track-event="PriceBlockViewed" data-track='{"step":"offer","priceCash":497,"installments":12,"installmentValue":51.10}'>
+      <section class="section-band pricing-section" ${stageAttributes(STAGES.price)} data-track-event="PriceBlockViewed" data-track='{"step":"offer","priceCash":497,"installments":12,"installmentValue":51.10}'>
         <p class="eyebrow">Investimento da mentoria</p>
         <h2><span>R$497</span><small>à vista</small></h2>
         <p class="installments">ou 12x de R$51,10</p>
@@ -747,7 +866,7 @@
         <p class="privacy-note">Você será direcionada(o) para o checkout seguro.</p>
       </section>
 
-      <section class="section-band faq-section" data-track-event="FAQViewed" data-track='{"step":"faq"}'>
+      <section class="section-band faq-section" ${stageAttributes(STAGES.faq)} data-track-event="FAQViewed" data-track='{"step":"faq"}'>
         <h2>Perguntas frequentes</h2>
         ${faqs().map((item, index) => `
           <details data-faq="${index + 1}">
@@ -757,7 +876,7 @@
         `).join("")}
       </section>
 
-      <section class="section-band final-cta" data-track-event="FinalCtaViewed" data-track='{"step":"final_cta","ctaLocation":"final_cta"}'>
+      <section class="section-band final-cta" ${stageAttributes(STAGES.finalCta)} data-track-event="FinalCtaViewed" data-track='{"step":"final_cta","ctaLocation":"final_cta"}'>
         <h2>Seu próximo passo não precisa ser grande. Precisa ser claro.</h2>
         <p>Se o diagnóstico fez sentido, a mentoria é o caminho para transformar esse primeiro passo em prática acompanhada.</p>
         ${primaryButton("Sim, quero começar essa jornada", 'data-checkout="final_cta"')}
@@ -837,7 +956,7 @@
           state.viewedObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.45 });
+    }, { threshold: 0.2 });
 
     blocks.forEach((block) => state.viewedObserver.observe(block));
   }
@@ -852,6 +971,15 @@
       data = {};
     }
     tracking.trackEvent(block.dataset.trackEvent, data);
+
+    if (block.dataset.stageId) {
+      beginStage({
+        stageId: block.dataset.stageId,
+        stageOrder: Number(block.dataset.stageOrder),
+        stageGroup: block.dataset.stageGroup,
+        stageLabel: block.dataset.stageLabel
+      });
+    }
   }
 
   function setupCheckoutButtons() {
@@ -877,6 +1005,8 @@
           ctaLocation
         });
 
+        finishActiveStage("checkout_clicked", true);
+        trackStageViewed(STAGES.checkout);
         window.location.href = tracking.buildCheckoutUrl(ctaLocation);
       });
     });
@@ -908,6 +1038,10 @@
       });
     });
   }
+
+  window.addEventListener("pagehide", () => {
+    finishActiveStage("page_exit", false, true);
+  });
 
   render();
 })();
