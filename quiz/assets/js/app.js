@@ -851,10 +851,10 @@
         <p class="context-note">Relatos de acompanhamentos anteriores conduzidos por Jean Santos.</p>
       </section>
 
-      <section class="section-band pricing-section" ${stageAttributes(STAGES.price)} data-track-event="PriceBlockViewed" data-track='{"step":"offer","priceCash":497,"installments":12,"installmentValue":51.10}'>
+      <section class="section-band pricing-section" ${stageAttributes(STAGES.price)} data-track-event="PriceBlockViewed" data-track='{"step":"offer","priceCash":297,"installments":12,"installmentValue":30.54}'>
         <p class="eyebrow">Investimento da mentoria</p>
-        <h2><span>R$497</span><small>à vista</small></h2>
-        <p class="installments">ou 12x de R$51,10</p>
+        <h2 class="installment-price">12x de <strong>R$ 30,54</strong></h2>
+        <p class="cash-price">à vista R$ 297,00</p>
         <p>Seu cônjuge pode participar sem custo adicional.</p>
         <ul>
           <li>2 meses de jornada.</li>

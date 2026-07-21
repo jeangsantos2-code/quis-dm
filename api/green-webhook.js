@@ -122,7 +122,7 @@ module.exports = async function handler(req, res) {
     category: String(pick(payload, ["category", "metadata.category", "data.category", "data.metadata.category", "query.category"]) || saleMetaValue(saleMetas, ["category"])),
     mainDimension: String(pick(payload, ["mainDimension", "main_dimension", "metadata.mainDimension", "metadata.main_dimension", "data.mainDimension", "data.metadata.mainDimension", "query.mainDimension", "query.main_dimension"]) || saleMetaValue(saleMetas, ["mainDimension", "main_dimension"])),
     publicScore,
-    value: Number(pick(payload, ["value", "amount", "price", "sale.amount", "currentSale.amount", "product.amount", "data.value", "data.amount", "data.sale.amount"]) || 497),
+    value: Number(pick(payload, ["value", "amount", "price", "sale.amount", "currentSale.amount", "product.amount", "data.value", "data.amount", "data.sale.amount"]) || 297),
     currency: String(pick(payload, ["currency", "sale.currency", "data.currency", "data.sale.currency"]) || "BRL"),
     paymentStatus,
     product: String(pick(payload, ["product.name", "product.title", "data.product.name", "data.product.title"]) || "Mentoria Casamento Nota 9"),

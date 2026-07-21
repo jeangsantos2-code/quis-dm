@@ -1170,19 +1170,19 @@ blockquote {
   font-size: 0.85rem;
 }
 
-.pricing-section h2 {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.16em;
+.pricing-section .installment-price {
   margin-bottom: 4px;
-  font-size: 3.2rem;
+  color: var(--ouro);
+  font-family: var(--serif);
+  font-size: 2.35rem;
+  font-weight: 400;
+  line-height: 1.05;
+  white-space: nowrap;
 }
 
-.pricing-section h2 small {
-  font-family: var(--sans);
-  font-size: 0.36em;
+.pricing-section .installment-price strong {
+  color: inherit;
+  font-family: inherit;
   font-weight: 700;
 }
 
@@ -1197,10 +1197,12 @@ blockquote {
   text-align: left;
 }
 
-.installments {
+.cash-price {
+  margin-top: 0;
   color: var(--ouro) !important;
   font-family: var(--serif);
-  font-size: 1.6rem;
+  font-size: 1.45rem;
+  line-height: 1.2;
 }
 
 .pricing-section .button {
@@ -1406,8 +1408,12 @@ blockquote {
     aspect-ratio: 8 / 5;
   }
 
-  .pricing-section h2 {
-    font-size: 3.8rem;
+  .pricing-section .installment-price {
+    font-size: 3.4rem;
+  }
+
+  .pricing-section .cash-price {
+    font-size: 1.8rem;
   }
 
   .testimonial-grid {

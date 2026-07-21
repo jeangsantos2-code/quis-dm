@@ -137,7 +137,7 @@
       return {
         content_name: "Mentoria Casamento Nota 9",
         content_type: "product",
-        value: config.PRICE_CASH || 497,
+        value: config.PRICE_CASH || 297,
         currency: "BRL"
       };
     }
