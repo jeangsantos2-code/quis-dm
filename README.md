@@ -4,6 +4,10 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 
 ## Estrutura
 
+- `linkbio/index.html`: hub editorial do link da bio para diagnóstico, mentorias e suporte.
+- `linkbio/assets/css/styles.css`: extensão responsiva do design system do quiz.
+- `linkbio/assets/js/config.js`: URLs oficiais, WhatsApp e atribuição padrão.
+- `linkbio/assets/js/app.js`: links seguros, passagem de UTMs e eventos da página.
 - `quiz/index.html`: experiência principal do quiz.
 - `quiz/obrigado.html`: página de obrigado, sem disparar `Purchase`.
 - `quiz/politica-de-privacidade.html`: política de privacidade.
@@ -21,6 +25,8 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 
 Eventos principais para decisão:
 
+- `linkbio_view`: visita ao hub editorial do link da bio.
+- `linkbio_destination_click`: clique em um destino, identificado como `diagnostico`, `mentoria_grupo`, `mentoria_individual` ou `time_cuidados`.
 - `QuizLandingViewed`: visita.
 - `QuizStarted`: início do quiz.
 - `QuizCompleted`: conclusão das perguntas.
@@ -89,8 +95,10 @@ Views criadas no Notion:
 
 1. Crie o projeto na Vercel apontando para este repositório.
 2. Configure as variáveis de ambiente necessárias.
-3. Publique normalmente. O `vercel.json` reescreve `/` e `/quiz` para o quiz.
+3. Publique normalmente. O `vercel.json` mantém o quiz em `/` e `/quiz` e serve a ponte em `/linkbio`.
 4. Configure a Green para enviar webhook `POST` para `/api/green-webhook` com o token definido.
+
+O domínio canônico é `casamentonota9.vercel.app`. O host anterior `quis-dm.vercel.app` permanece ativo apenas para redirecionar permanentemente, com caminho e parâmetros preservados. A rota legada `/mentoria` redireciona com 308 para `/mentoria-em-grupo`.
 
 Detalhes em `docs/vercel-deploy.md`.
 
@@ -102,7 +110,7 @@ Rode:
 node dev-server.js
 ```
 
-Abra `http://127.0.0.1:4173/quiz/`.
+Abra o quiz em `http://127.0.0.1:4173/quiz/` e a página do link da bio em `http://127.0.0.1:4173/linkbio`.
 
 ## Checklist manual
 

@@ -1,13 +1,41 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "quis-dm.vercel.app"
+        }
+      ],
+      "destination": "https://casamentonota9.vercel.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/mentoria",
+      "destination": "/mentoria-em-grupo",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/quiz/index.html" },
-    { "source": "/quiz", "destination": "/quiz/index.html" }
+    { "source": "/quiz", "destination": "/quiz/index.html" },
+    { "source": "/linkbio", "destination": "/linkbio/index.html" }
   ],
   "headers": [
     {
       "source": "/quiz/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/linkbio/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

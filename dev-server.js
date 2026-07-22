@@ -32,11 +32,19 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (requestUrl.pathname === "/mentoria") {
+    res.statusCode = 308;
+    res.setHeader("Location", `/mentoria-em-grupo${requestUrl.search}`);
+    res.end();
+    return;
+  }
+
   serveStatic(requestUrl.pathname, res);
 });
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Quiz Casamento Nota 9 em http://127.0.0.1:${port}/quiz/`);
+  console.log(`Link da bio em http://127.0.0.1:${port}/linkbio`);
 });
 
 async function runApi(handler, req, res, requestUrl) {
@@ -101,6 +109,7 @@ function readBody(req) {
 function serveStatic(pathname, res) {
   let safePath = decodeURIComponent(pathname);
   if (safePath === "/" || safePath === "/quiz") safePath = "/quiz/index.html";
+  if (safePath === "/linkbio") safePath = "/linkbio/index.html";
   if (safePath.endsWith("/")) safePath += "index.html";
 
   const filePath = path.resolve(root, `.${safePath}`);

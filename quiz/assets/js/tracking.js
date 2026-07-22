@@ -14,7 +14,10 @@
     "fbclid",
     "ref",
     "subscriber_id",
-    "cuid"
+    "cuid",
+    "entry_point",
+    "cta_position",
+    "destination"
   ];
 
   const UNIQUE_EVENTS = new Set([
@@ -99,6 +102,22 @@
     return origin;
   }
 
+  function setOrigin(values = {}) {
+    const stored = readJson("cn9_origin", {});
+    const origin = { ...stored };
+
+    ORIGIN_KEYS.forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(values, key)) {
+        origin[key] = values[key] ? String(values[key]) : "";
+      } else if (!origin[key]) {
+        origin[key] = "";
+      }
+    });
+
+    writeJson("cn9_origin", origin);
+    return origin;
+  }
+
   function getDevice() {
     return {
       viewportWidth: window.innerWidth,
@@ -109,6 +128,7 @@
 
   function getPageName() {
     const path = window.location.pathname;
+    if (path.includes("linkbio")) return "linkbio";
     if (path.includes("obrigado")) return "obrigado";
     if (path.includes("politica")) return "politica";
     if (path.includes("termos")) return "termos";
@@ -240,6 +260,7 @@
     setLeadId,
     createLeadId,
     getOrigin,
+    setOrigin,
     trackEvent,
     buildCheckoutUrl
   };

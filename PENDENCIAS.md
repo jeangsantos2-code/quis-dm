@@ -41,7 +41,7 @@ O dashboard Google Sheets está recebendo dados automaticamente e já possui fun
 
 ## Produção Vercel
 
-- URL publicada: https://quis-dm.vercel.app
+- URL publicada: https://casamentonota9.vercel.app
 - Projeto Vercel: `quis-dm`
 - Repositório GitHub: https://github.com/jeangsantos2-code/quis-dm
 - Project ID local: `prj_0P4hG1GgZn3Umvb1E94xN7DZrTwU`
@@ -91,7 +91,7 @@ Views criadas:
 
 ### Resolvido sem acao do usuario
 
-- Corrigido o carregamento da URL `https://quis-dm.vercel.app/quiz`.
+- Corrigido o carregamento da URL `https://casamentonota9.vercel.app/quiz`.
 - Corrigidos os caminhos de scripts, CSS, imagem e links legais no clean URL `/quiz`.
 - Adicionado versionamento dos assets para evitar cache antigo no navegador.
 - Validado o deploy automatico GitHub -> Vercel apos push em `main`.

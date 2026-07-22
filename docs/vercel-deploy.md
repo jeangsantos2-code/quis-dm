@@ -12,7 +12,7 @@ O projeto já tem:
 Produção atual:
 
 ```txt
-https://quis-dm.vercel.app
+https://casamentonota9.vercel.app
 ```
 
 Projeto Vercel:
@@ -74,6 +74,18 @@ vercel git connect https://github.com/jeangsantos2-code/quis-dm.git --scope jean
 ```
 
 Estado atual: remote Git conectado e branch `main` publicada.
+
+## Domínio canônico
+
+O domínio principal atribuído ao projeto `quis-dm` é:
+
+```txt
+https://casamentonota9.vercel.app
+```
+
+O host anterior `quis-dm.vercel.app` permanece atribuído para compatibilidade e redireciona com 308 para o domínio canônico, preservando caminho e query string. A rota legada `/mentoria` também redireciona com 308 para `/mentoria-em-grupo`.
+
+Depois de cada publicação, validar `/linkbio`, `/quiz`, `/api/track` e `/api/green-webhook` no domínio canônico. Green, Youze e todos os novos links públicos devem usar `casamentonota9.vercel.app`.
 
 ## Webhook Green
 

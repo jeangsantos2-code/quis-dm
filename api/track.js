@@ -1,4 +1,6 @@
 const ALLOWED_EVENTS = new Set([
+  "linkbio_view",
+  "linkbio_destination_click",
   "QuizLandingViewed",
   "HeroViewed",
   "QuizStarted",

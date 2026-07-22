@@ -1,0 +1,306 @@
+.linkbio-body {
+  min-width: 320px;
+}
+
+.linkbio-shell {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 10px 24px;
+}
+
+.linkbio-header,
+.linkbio-page,
+.linkbio-footer {
+  width: min(100%, 1040px);
+}
+
+.linkbio-header {
+  min-height: 38px;
+}
+
+.linkbio-page {
+  display: grid;
+  gap: 18px;
+}
+
+.diagnostic-card,
+.mentoring-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--marfim-2);
+  box-shadow: var(--soft-shadow);
+}
+
+.diagnostic-card {
+  display: grid;
+  gap: 24px;
+  padding: 28px 18px 18px;
+}
+
+.diagnostic-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.diagnostic-copy h1 {
+  margin-bottom: 14px;
+  font-size: 2.35rem;
+}
+
+.diagnostic-copy > p {
+  max-width: 500px;
+  margin-bottom: 20px;
+  color: var(--verde);
+}
+
+.destination-cta {
+  position: relative;
+  width: min(100%, 390px);
+  margin-inline: auto;
+  padding-inline: 34px;
+}
+
+.destination-cta .button-label {
+  width: 100%;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.destination-cta .button-arrow {
+  position: absolute;
+  right: 14px;
+  flex: 0 0 auto;
+}
+
+.diagnostic-visual {
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--areia);
+}
+
+.diagnostic-visual picture,
+.diagnostic-visual img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.diagnostic-visual img {
+  object-fit: cover;
+  object-position: center 48%;
+}
+
+.mentoring-section {
+  display: block;
+}
+
+.mentoring-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.mentoring-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 18px 20px;
+}
+
+.mentoring-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mentoring-card h2 {
+  margin: 0 0 14px;
+  color: var(--verde);
+  font-family: var(--serif);
+  font-size: 1.55rem;
+}
+
+.mentoring-card p {
+  margin-bottom: 14px;
+}
+
+.mentoring-card .card-highlight {
+  color: var(--verde);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.application-note {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.card-action {
+  height: 110px;
+  min-height: 110px;
+  display: grid;
+  grid-template-rows: 64px 38px;
+  gap: 8px;
+  align-content: end;
+  margin-top: 12px;
+}
+
+.card-action .button {
+  min-height: 64px;
+  height: 100%;
+}
+
+.availability-note {
+  align-self: start;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.destination-cta.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  box-shadow: none;
+}
+
+.destination-cta.is-disabled:hover {
+  transform: none;
+}
+
+.care-section {
+  padding: 28px 16px 10px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.care-section h2 {
+  margin-bottom: 18px;
+  font-size: 1.55rem;
+}
+
+.care-section .destination-cta {
+  padding-inline: 44px;
+}
+
+.whatsapp-icon {
+  position: absolute;
+  left: 16px;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  fill: currentColor;
+}
+
+.linkbio-footer {
+  padding: 16px 16px 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.footer-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.footer-identity p {
+  display: grid;
+  margin: 0;
+  color: var(--verde);
+  text-align: left;
+}
+
+.footer-identity strong {
+  font-family: var(--serif);
+  font-weight: 600;
+}
+
+.footer-identity span,
+.linkbio-footer > p {
+  font-size: 0.76rem;
+}
+
+.linkbio-footer > p {
+  margin-bottom: 0;
+}
+
+@media (min-width: 760px) {
+  .linkbio-shell {
+    gap: 18px;
+    padding: 24px 28px 34px;
+  }
+
+  .linkbio-page {
+    gap: 28px;
+  }
+
+  .diagnostic-card {
+    grid-template-columns: minmax(0, 1.04fr) minmax(330px, 0.96fr);
+    gap: 38px;
+    align-items: center;
+    padding: 40px;
+  }
+
+  .diagnostic-copy {
+    align-items: center;
+  }
+
+  .diagnostic-copy h1 {
+    font-size: 3rem;
+  }
+
+  .diagnostic-visual {
+    min-height: 310px;
+  }
+
+  .mentoring-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .mentoring-card {
+    min-height: 440px;
+    padding: 30px 28px 24px;
+  }
+
+  .care-section {
+    padding-top: 36px;
+  }
+}
+
+@media (max-width: 359px) {
+  .diagnostic-card,
+  .mentoring-card {
+    padding-inline: 15px;
+  }
+
+  .diagnostic-copy h1 {
+    font-size: 2.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
