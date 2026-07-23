@@ -17,7 +17,8 @@
     "cuid",
     "entry_point",
     "cta_position",
-    "destination"
+    "destination",
+    "quiz_entry"
   ];
 
   const UNIQUE_EVENTS = new Set([
@@ -129,6 +130,7 @@
   function getPageName() {
     const path = window.location.pathname;
     if (path.includes("linkbio")) return "linkbio";
+    if (path.includes("mentoria-em-grupo")) return "mentoria_em_grupo";
     if (path.includes("obrigado")) return "obrigado";
     if (path.includes("politica")) return "politica";
     if (path.includes("termos")) return "termos";

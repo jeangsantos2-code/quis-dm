@@ -3,6 +3,7 @@
   const config = window.CN9_CONFIG;
   const scoring = window.CN9Scoring;
   const tracking = window.CN9Tracking;
+  const entryContext = readEntryContext();
 
   const INTERSTITIALS = {
     1: {
@@ -87,7 +88,7 @@
   };
 
   const state = {
-    screen: "intro",
+    screen: entryContext.skipIntro ? "instruction" : "intro",
     questionIndex: 0,
     interstitialNumber: 1,
     quizStartedAt: Number(sessionStorage.getItem("cn9_quiz_started_at")) || 0,
@@ -100,6 +101,19 @@
     activeStage: null,
     activeStageStartedAt: 0
   };
+
+  function readEntryContext() {
+    const search = new URLSearchParams(window.location.search);
+    const entryPoint = String(search.get("entry_point") || "").trim();
+    const entryMode = String(search.get("quiz_entry") || "").trim();
+    const skipIntro = entryPoint === "link_bio_page" && entryMode === "instruction";
+
+    return {
+      entryPoint,
+      entryMode: skipIntro ? "linkbio_instruction" : "standard_intro",
+      skipIntro
+    };
+  }
 
   function readAnswers() {
     try {
@@ -247,13 +261,26 @@
       ${legalMiniFooter(true)}
     `;
 
-    tracking.trackEvent("QuizLandingViewed", { step: "landing" });
-    tracking.trackEvent("HeroViewed", { component: "HeroIntro" });
+    tracking.trackEvent("QuizLandingViewed", {
+      step: "landing",
+      entryMode: entryContext.entryMode,
+      introSkipped: false
+    });
+    tracking.trackEvent("HeroViewed", {
+      component: "HeroIntro",
+      entryMode: entryContext.entryMode
+    });
 
     document.getElementById("start-quiz").addEventListener("click", () => {
       state.quizStartedAt = Date.now();
       sessionStorage.setItem("cn9_quiz_started_at", String(state.quizStartedAt));
-      tracking.trackEvent("QuizStarted", { step: "landing", buttonText: "Começar agora" });
+      tracking.trackEvent("QuizStarted", {
+        step: "landing",
+        buttonText: "Começar agora",
+        startMethod: "intro_cta",
+        entryMode: entryContext.entryMode,
+        introSkipped: false
+      });
       setScreen("instruction", {}, "quiz_started");
     });
   }
@@ -1042,6 +1069,39 @@
   window.addEventListener("pagehide", () => {
     finishActiveStage("page_exit", false, true);
   });
+
+  if (entryContext.skipIntro) {
+    state.quizStartedAt = Date.now();
+    sessionStorage.setItem("cn9_quiz_started_at", String(state.quizStartedAt));
+
+    tracking.trackEvent("QuizLandingViewed", {
+      step: "landing",
+      entryMode: entryContext.entryMode,
+      introSkipped: true
+    });
+    tracking.trackEvent("QuizStarted", {
+      step: "landing",
+      buttonText: "Quero descobrir minha nota",
+      startMethod: "linkbio_contextual_entry",
+      entryMode: entryContext.entryMode,
+      introSkipped: true
+    });
+    trackStageViewed({
+      ...STAGES.landing,
+      entryMode: entryContext.entryMode,
+      introSkipped: true
+    });
+    tracking.trackEvent("FunnelStageExited", {
+      ...STAGES.landing,
+      step: STAGES.landing.stageId,
+      durationSeconds: 0,
+      exitReason: "contextual_skip",
+      completed: true,
+      potentialAbandonment: false,
+      entryMode: entryContext.entryMode,
+      introSkipped: true
+    });
+  }
 
   render();
 })();

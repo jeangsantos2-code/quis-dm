@@ -12,6 +12,17 @@ Na aba `Dashboard`:
 - o grafico `Top 10 gargalos detalhados` ordena as maiores perdas entre etapas consecutivas.
 - a area `Atribuicao por post` compara visitas, inicios, conclusoes, leads, checkout, compras e conversao por `source_post`.
 
+## Prioridade de leitura
+
+O funil principal deve usar sessoes do quiz originadas na automacao de DM, identificadas por `utm_medium=dm` e pelos campos de origem enviados pela Youze, ate a confirmacao `Purchase` da Green.
+
+LinkBio e Mentoria em Grupo devem aparecer em blocos auxiliares separados:
+
+- LinkBio: `linkbio_view` -> `linkbio_section_view` -> `linkbio_destination_click`.
+- Mentoria em Grupo: `mentoring_landing_view` -> `mentoring_section_view` -> `mentoring_checkout_click`.
+
+Nao some visitas da LinkBio ou da landing da Mentoria ao denominador do funil principal da DM. Quando a LinkBio envia `quiz_entry=instruction`, os eventos do quiz registram `entryMode=linkbio_instruction` e `introSkipped=true` no JSON da coluna `V`.
+
 Enquanto a Youze nao enviar `source_post` no link, essa area mostra `Aguardando origem completa da Youze`. Isso evita atribuir trafego sem evidencia e torna a pendencia visivel no proprio dashboard.
 
 O arquivo `docs/google-apps-script.js` e o receptor que deve ser publicado como Web App no Apps Script. Ele usa a propriedade de script `WEBHOOK_SECRET` e grava na planilha sem expor uma credencial de conta Google na Vercel.

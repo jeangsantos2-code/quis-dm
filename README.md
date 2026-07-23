@@ -8,6 +8,8 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 - `linkbio/assets/css/styles.css`: extensão responsiva do design system do quiz.
 - `linkbio/assets/js/config.js`: URLs oficiais, WhatsApp e atribuição padrão.
 - `linkbio/assets/js/app.js`: links seguros, passagem de UTMs e eventos da página.
+- `mentoria-em-grupo/index.html`: landing da Mentoria Casamento Nota 9.
+- `mentoria-em-grupo/assets/`: estilos, configuração de oferta e tracking da landing.
 - `quiz/index.html`: experiência principal do quiz.
 - `quiz/obrigado.html`: página de obrigado, sem disparar `Purchase`.
 - `quiz/politica-de-privacidade.html`: política de privacidade.
@@ -23,10 +25,22 @@ Experiência mobile-first de diagnóstico e conversão para o Movimento Casament
 
 ## Tracking do funil
 
-Eventos principais para decisão:
+Prioridade de análise:
+
+- **Funil principal:** origem da automação de DM -> visita ao quiz -> início -> perguntas/interstícios -> captura -> diagnóstico/oferta -> checkout -> `Purchase` confirmado pela Green.
+- **Fluxos auxiliares:** LinkBio e landing da Mentoria em Grupo. Eles são medidos para otimização própria, mas não devem ser somados ao funil principal da DM.
+- **Segmentação obrigatória:** comparar sessões únicas por `entry_point`, UTMs, `ref`, campanha e `quiz_entry`.
+
+Eventos disponíveis:
 
 - `linkbio_view`: visita ao hub editorial do link da bio.
+- `linkbio_section_view`: alcance de cada bloco da LinkBio.
 - `linkbio_destination_click`: clique em um destino, identificado como `diagnostico`, `mentoria_grupo`, `mentoria_individual` ou `time_cuidados`.
+- `mentoring_landing_view`: visita à landing da Mentoria em Grupo.
+- `mentoring_section_view`: alcance de cada seção da landing, da hero ao CTA final.
+- `mentoring_checkout_click`: clique no checkout, identificado por posição do CTA.
+- `mentoring_testimonial_view`: visualização de cada relato.
+- `mentoring_faq_open`: abertura de uma pergunta frequente.
 - `QuizLandingViewed`: visita.
 - `QuizStarted`: início do quiz.
 - `QuizCompleted`: conclusão das perguntas.
@@ -39,6 +53,8 @@ Eventos principais para decisão:
 
 O checkout recebe `sessionId`, `leadId`, UTMs, `cta`, `publicScore`, `category` e `mainDimension`.
 As bases do Notion têm colunas separadas para origem completa, campanha, post, nota, categoria, dimensão e status de compra.
+
+A LinkBio adiciona `quiz_entry=instruction` ao diagnóstico. O quiz só pula a introdução quando essa flag aparece junto de `entry_point=link_bio_page`. A visita, o início e a saída contextual da introdução continuam registrados; DM, acesso direto e outras origens mantêm a tela inicial.
 
 O acompanhamento detalhado usa dois eventos padronizados sem remover os eventos históricos:
 
@@ -95,7 +111,7 @@ Views criadas no Notion:
 
 1. Crie o projeto na Vercel apontando para este repositório.
 2. Configure as variáveis de ambiente necessárias.
-3. Publique normalmente. O `vercel.json` mantém o quiz em `/` e `/quiz` e serve a ponte em `/linkbio`.
+3. Publique normalmente. O `vercel.json` mantém o quiz em `/` e `/quiz`, a ponte em `/linkbio` e a landing em `/mentoria-em-grupo`.
 4. Configure a Green para enviar webhook `POST` para `/api/green-webhook` com o token definido.
 
 O domínio canônico é `casamentonota9.vercel.app`. O host anterior `quis-dm.vercel.app` permanece ativo apenas para redirecionar permanentemente, com caminho e parâmetros preservados. A rota legada `/mentoria` redireciona com 308 para `/mentoria-em-grupo`.
@@ -110,7 +126,7 @@ Rode:
 node dev-server.js
 ```
 
-Abra o quiz em `http://127.0.0.1:4173/quiz/` e a página do link da bio em `http://127.0.0.1:4173/linkbio`.
+Abra o quiz em `http://127.0.0.1:4173/quiz/`, a página do link da bio em `http://127.0.0.1:4173/linkbio` e a landing em `http://127.0.0.1:4173/mentoria-em-grupo`.
 
 ## Checklist manual
 

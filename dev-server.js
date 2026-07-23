@@ -45,6 +45,7 @@ const server = http.createServer(async (req, res) => {
 server.listen(port, "127.0.0.1", () => {
   console.log(`Quiz Casamento Nota 9 em http://127.0.0.1:${port}/quiz/`);
   console.log(`Link da bio em http://127.0.0.1:${port}/linkbio`);
+  console.log(`Mentoria em Grupo em http://127.0.0.1:${port}/mentoria-em-grupo`);
 });
 
 async function runApi(handler, req, res, requestUrl) {
@@ -110,6 +111,10 @@ function serveStatic(pathname, res) {
   let safePath = decodeURIComponent(pathname);
   if (safePath === "/" || safePath === "/quiz") safePath = "/quiz/index.html";
   if (safePath === "/linkbio") safePath = "/linkbio/index.html";
+  if (safePath === "/mentoria-em-grupo") safePath = "/mentoria-em-grupo/index.html";
+  if (safePath === "/quiz/obrigado") safePath = "/quiz/obrigado.html";
+  if (safePath === "/quiz/politica-de-privacidade") safePath = "/quiz/politica-de-privacidade.html";
+  if (safePath === "/quiz/termos-de-uso") safePath = "/quiz/termos-de-uso.html";
   if (safePath.endsWith("/")) safePath += "index.html";
 
   const filePath = path.resolve(root, `.${safePath}`);

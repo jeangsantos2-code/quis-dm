@@ -36,6 +36,7 @@ Uma sessão isolada serve para validar o encadeamento técnico, mas não para co
 4. Fazer um teste real de compra com valor controlado.
 5. Validar no Notion se as bases `CN9 - Leads`, `CN9 - Eventos` e `CN9 - Vendas` receberam os dados corretamente.
 6. Opcional: republicar o Apps Script com a versão atual de `docs/google-apps-script.js` para preencher diretamente as colunas detalhadas `W:AC`. O dashboard já lê os mesmos campos no JSON da coluna `V`, então esta melhoria não bloqueia a análise.
+7. Confirmar se os encontros da Mentoria em Grupo ficarão gravados. A pergunta foi retirada do FAQ até existir uma resposta operacional definitiva.
 
 O dashboard Google Sheets está recebendo dados automaticamente e já possui funil macro, funil detalhado, gargalos, origem, campanha, categoria e dimensão principal.
 

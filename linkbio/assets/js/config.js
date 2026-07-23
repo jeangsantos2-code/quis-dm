@@ -2,8 +2,9 @@
   window.CN9_LINKBIO_CONFIG = Object.freeze({
     LINK_BIO_URL: "https://casamentonota9.vercel.app/linkbio",
     DIAGNOSTIC_URL: "https://casamentonota9.vercel.app/quiz",
+    DIAGNOSTIC_ENTRY_MODE: "instruction",
     GROUP_MENTORING_URL: "https://casamentonota9.vercel.app/mentoria-em-grupo",
-    GROUP_MENTORING_ENABLED: false,
+    GROUP_MENTORING_ENABLED: true,
     WHATSAPP_NUMBER: "554391392143",
     WHATSAPP_DISPLAY: "+55 (43) 9139-2143",
     INDIVIDUAL_MENTORING_MESSAGE: "Olá, vim do link da bio do perfil do Jean e quero me candidatar à Mentoria Individual. Gostaria de entender como funciona a conversa de aplicação.",
