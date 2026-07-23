@@ -60,7 +60,6 @@
 .mg-brand {
   width: min(100%, 1120px);
   margin-inline: auto;
-  font-size: 0.9rem;
 }
 
 .mg-kicker {
@@ -1042,12 +1041,7 @@
 }
 
 .mg-footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--verde);
-  font-family: var(--serif);
-  font-size: 0.9rem;
+  width: auto;
 }
 
 .mg-footer p {
@@ -1207,10 +1201,6 @@
 
   .mg-header {
     padding-block: 22px 14px;
-  }
-
-  .mg-brand {
-    font-size: 0.96rem;
   }
 
   .mg-hero {

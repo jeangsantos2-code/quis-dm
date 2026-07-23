@@ -134,7 +134,6 @@ h3 {
 }
 
 .quiz-card {
-  min-height: calc(100svh - 136px);
   display: flex;
   flex-direction: column;
 }
@@ -146,6 +145,7 @@ h3 {
 
 .brand-header {
   width: min(100%, 440px);
+  min-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,7 +154,12 @@ h3 {
   color: var(--verde);
   font-family: var(--serif);
   font-size: 0.86rem;
+  line-height: 1.2;
   text-align: center;
+}
+
+.brand-header > span:last-child {
+  white-space: nowrap;
 }
 
 .result-shell > .brand-header {
@@ -1375,10 +1380,6 @@ blockquote {
     padding: 32px;
   }
 
-  .quiz-card {
-    min-height: min(780px, calc(100svh - 152px));
-  }
-
   .section-band {
     width: 100%;
     padding: 38px 36px;
@@ -1441,10 +1442,6 @@ blockquote {
   .quiz-card,
   .result-page {
     border-radius: 22px;
-  }
-
-  .quiz-card {
-    min-height: calc(100svh - 126px);
   }
 
   h1 {

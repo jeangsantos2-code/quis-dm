@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 12px 10px 24px;
 }
 
@@ -16,10 +16,6 @@
 .linkbio-page,
 .linkbio-footer {
   width: min(100%, 1040px);
-}
-
-.linkbio-header {
-  min-height: 38px;
 }
 
 .linkbio-page {
@@ -114,7 +110,6 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 24px 18px 20px;
 }
 
@@ -149,23 +144,16 @@
 }
 
 .card-action {
-  height: 110px;
-  min-height: 110px;
-  display: grid;
-  grid-template-rows: 64px 38px;
-  gap: 8px;
-  align-content: end;
-  margin-top: 12px;
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .card-action .button {
-  min-height: 64px;
-  height: 100%;
+  min-height: 60px;
 }
 
 .availability-note {
-  align-self: start;
-  margin: 0;
+  margin: 8px 0 0;
   color: var(--muted);
   font-size: 0.78rem;
   text-align: center;
@@ -212,25 +200,10 @@
 }
 
 .footer-identity {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  width: auto;
   margin-bottom: 8px;
 }
 
-.footer-identity p {
-  display: grid;
-  margin: 0;
-  color: var(--verde);
-  text-align: left;
-}
-
-.footer-identity strong {
-  font-family: var(--serif);
-  font-weight: 600;
-}
-
-.footer-identity span,
 .linkbio-footer > p {
   font-size: 0.76rem;
 }
@@ -241,7 +214,7 @@
 
 @media (min-width: 760px) {
   .linkbio-shell {
-    gap: 18px;
+    gap: 16px;
     padding: 24px 28px 34px;
   }
 
@@ -274,8 +247,7 @@
   }
 
   .mentoring-card {
-    min-height: 440px;
-    padding: 30px 28px 24px;
+    padding: 30px 28px 28px;
   }
 
   .care-section {
