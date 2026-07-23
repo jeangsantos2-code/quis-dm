@@ -4,6 +4,7 @@ const ALLOWED_EVENTS = new Set([
   "linkbio_destination_click",
   "mentoring_landing_view",
   "mentoring_section_view",
+  "mentoring_cta_click",
   "mentoring_checkout_click",
   "mentoring_testimonial_view",
   "mentoring_faq_open",

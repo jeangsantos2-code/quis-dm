@@ -18,6 +18,7 @@
   });
 
   setupCheckoutLinks();
+  setupInternalCtas();
   setupSectionTracking();
   setupTestimonialTracking();
   setupTestimonialCarousel();
@@ -81,6 +82,29 @@
         }));
 
         window.location.assign(buildCheckoutUrl(ctaPosition));
+      });
+    });
+  }
+
+  function setupInternalCtas() {
+    document.querySelectorAll("[data-scroll-target]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const selector = String(link.dataset.scrollTarget || "").trim();
+        const target = selector ? document.querySelector(selector) : null;
+        if (!target) return;
+
+        event.preventDefault();
+        const ctaPosition = link.dataset.ctaPosition || "";
+        tracking.setOrigin({ cta_position: ctaPosition });
+        tracking.trackEvent("mentoring_cta_click", eventData({
+          cta_position: ctaPosition,
+          destination: selector
+        }));
+
+        target.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start"
+        });
       });
     });
   }

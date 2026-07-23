@@ -38,6 +38,7 @@ Eventos disponíveis:
 - `linkbio_destination_click`: clique em um destino, identificado como `diagnostico`, `mentoria_grupo`, `mentoria_individual` ou `time_cuidados`.
 - `mentoring_landing_view`: visita à landing da Mentoria em Grupo.
 - `mentoring_section_view`: alcance de cada seção da landing, da hero ao CTA final.
+- `mentoring_cta_click`: clique em CTA interno da landing, identificado por posição e destino.
 - `mentoring_checkout_click`: clique no checkout, identificado por posição do CTA.
 - `mentoring_testimonial_view`: visualização de cada relato.
 - `mentoring_faq_open`: abertura de uma pergunta frequente.

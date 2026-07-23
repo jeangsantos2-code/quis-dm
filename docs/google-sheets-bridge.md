@@ -19,7 +19,7 @@ O funil principal deve usar sessoes do quiz originadas na automacao de DM, ident
 LinkBio e Mentoria em Grupo devem aparecer em blocos auxiliares separados:
 
 - LinkBio: `linkbio_view` -> `linkbio_section_view` -> `linkbio_destination_click`.
-- Mentoria em Grupo: `mentoring_landing_view` -> `mentoring_section_view` -> `mentoring_checkout_click`.
+- Mentoria em Grupo: `mentoring_landing_view` -> `mentoring_section_view` -> `mentoring_cta_click` ou `mentoring_checkout_click`.
 
 Nao some visitas da LinkBio ou da landing da Mentoria ao denominador do funil principal da DM. Quando a LinkBio envia `quiz_entry=instruction`, os eventos do quiz registram `entryMode=linkbio_instruction` e `introSkipped=true` no JSON da coluna `V`.
 
